@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Permission extends Model
+{
+    use HasFactory;
+    public $fillable = [
+        'name',
+        'guard_name'
+    ];
+
+    /**
+     * ===========================
+     * CONIFG MODEL
+     * ===========================
+     */
+    protected $dateFormat = 'U';
+}
