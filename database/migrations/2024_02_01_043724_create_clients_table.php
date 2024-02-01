@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('company_name');
             $table->string('company_address');
             $table->string('company_city');
-            $table->string('company_zip'); // tanya
-            $table->integer('company_val'); // tanya
+            $table->string('company_zip')->nullable(); // tanya
+            $table->integer('company_val')->nullable(); // tanya
 
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();

@@ -32,7 +32,7 @@ class User extends Authenticatable
      * CONFIG MODEL
      * ===========================
      */
-    protected $dateFormat = 'U';
+    // protected $dateFormat = 'U';
     protected $hidden = [
         'password',
         'remember_token',

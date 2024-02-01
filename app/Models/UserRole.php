@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Migration extends Model
+class UserRole extends Model
 {
     use HasFactory;
     public $fillable = [
-        'migration',
-        'batch',
+        'role_id',
+        'user_id'
     ];
 }

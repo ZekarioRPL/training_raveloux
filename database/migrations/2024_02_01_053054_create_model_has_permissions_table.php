@@ -15,6 +15,7 @@ return new class extends Migration
             $table->bigInteger('permission_id');
             $table->string('model_type');
             $table->bigInteger('model_id');
+            $table->timestamps();
         });
     }
 

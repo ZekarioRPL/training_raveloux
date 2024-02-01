@@ -1,0 +1,369 @@
+/* ============= default =============== */
+label {
+    @apply inline-block capitalize cursor-pointer mb-1;
+}
+
+input[type=radio],
+input[type=checkbox] {
+    @apply mb-[.1rem];
+}
+
+textarea,
+input {
+    @apply block;
+}
+
+section {
+    @apply mb-6;
+}
+
+@media (min-width: 1024px) {
+    section {
+        @apply px-4;
+    }
+}
+
+/* ============= end default =============== */
+
+
+
+
+
+
+
+
+
+/* ============= form-input =============== */
+.input-unset {
+    @apply h-[2.5rem];
+}
+
+.input-unset,
+.input-form {
+    @apply px-3 w-full bg-white;
+}
+
+.input-form {
+    @apply border rounded text-base h-[2.25rem];
+}
+
+select:focus,
+textarea:focus,
+input:focus,
+.input-form-active {
+    @apply outline-none;
+}
+
+select:not(:disabled):not(.input-form-disabled):focus,
+textarea:not(:disabled):not(.input-form-disabled):focus,
+input:not(:disabled):not(.input-form-disabled):focus,
+.input-form-active {
+    border-color: var(--primary);
+}
+
+textarea:disabled,
+input:disabled,
+.input-form-disabled {
+    @apply cursor-default;
+    background-color: var(--disabled);
+}
+
+.invalid-message {
+    @apply text-red-500 text-xs mt-1;
+}
+
+/* ============= form-input =============== */
+
+
+
+
+
+
+
+
+
+/* ============= button =============== */
+
+.btn {
+    line-height: initial;
+    @apply inline-flex items-center justify-center rounded-md cursor-pointer whitespace-nowrap;
+    @apply border shadow border-transparent text-white px-4 h-[2.5rem] capitalize;
+    background-color: var(--primary);
+}
+
+.btn>* {
+    margin: auto;
+}
+
+.btn-disabled,
+.btn:disabled,
+button:disabled {
+    background-color: rgba(0, 0, 0, .2) !important;
+    border-color: transparent !important;
+    cursor: not-allowed;
+}
+
+/* ============= button =============== */
+
+
+
+
+
+
+
+
+
+/* ============= card =============== */
+
+.card {
+    @apply w-full bg-white;
+}
+
+.modal>.card,
+.dropdown>.card {
+    @apply rounded-2xl;
+}
+
+.card-header {
+    @apply flex justify-between items-center pt-6 pb-4;
+}
+
+.card-title {
+    @apply text-xl grow capitalize;
+}
+
+.card-header,
+.card-body,
+.card-footer {
+    @apply px-6;
+}
+
+.card-footer {
+    @apply flex items-center py-6;
+}
+
+@media (min-width: 1024px) {
+    .card {
+        @apply rounded-2xl;
+    }
+}
+
+/* ============= end card =============== */
+
+
+
+
+
+
+
+
+
+/* ============= background style =============== */
+
+.bg-image,
+.bg-profile {
+    background-position: center 0;
+    @apply bg-no-repeat bg-cover bg-gray-600/50;
+}
+
+.bg-profile {
+    @apply rounded-[50%] aspect-square block bg-gray-600/50 h-[1.75rem] text-center;
+}
+
+/* ============= end background style =============== */
+
+
+
+
+
+
+
+
+
+
+/* ============= popup components =============== */
+.overlay-dropdown {
+    @apply fixed inset-0 bg-black/30;
+}
+
+.dropdown {
+    @apply relative z-20;
+}
+
+.dropdown .card {
+    @apply absolute;
+}
+
+/* ============= end popup components =============== */
+
+
+
+
+
+
+
+/* ============= pan menu components =============== */
+.pan-menu {
+    @apply flex border-b overflow-auto;
+}
+
+.pan-menu>.pan-link {
+    @apply px-8 py-3 text-center border-b-2 border-transparent text-gray-600 whitespace-nowrap cursor-pointer;
+    width: clamp(8rem, auto, auto);
+}
+
+.pan-menu>.pan-link:hover,
+.pan-menu>.pan-link.active {
+    color: var(--primary);
+}
+
+.pan-menu>.pan-link.active {
+    border-color: var(--primary);
+}
+
+/* ============= end pan menu components =============== */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============= mark components =============== */
+
+.mark {
+    background-color: var(--primary);
+    border-radius: 9999px;
+    padding: .19rem;
+    min-width: .89rem;
+    max-width: 1.6rem;
+    text-align: center;
+    color: white;
+    font-size: .5rem;
+    line-height: .5rem;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.mark-lg {
+    min-width: 1.3rem;
+    font-size: .75rem;
+    line-height: .75rem;
+    padding: .25rem;
+}
+
+/* ============= end mark components =============== */
+
+
+
+
+
+
+
+/* ============= radio card components =============== */
+.radio-card>label {
+    padding: 0.7rem 1.2rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--primary);
+    cursor: pointer;
+    transition: var(--my-delay-2);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.radio-card>label>.radio-check,
+.radio-card>label>.radio-check>svg {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+}
+
+.radio-card>label>.radio-check {
+    opacity: 0;
+    color: #fff;
+}
+
+.radio-card input:checked+label .radio-check {
+    opacity: 1;
+}
+
+.radio-card .radio-check .bg-radio-check {
+    background: var(--primary);
+    transform: rotate(45deg);
+    height: 50px;
+    width: 25px;
+    margin-top: -18px;
+    margin-left: -5px;
+}
+
+/* ============= end radio card components =============== */
+
+
+
+
+
+
+/* ============= modal components =============== */
+.modal {
+    @apply fixed inset-0 z-20 bg-black/30 overflow-auto;
+}
+
+/* ============= end modal components =============== */
+
+
+
+
+
+
+/* ============= confirm components =============== */
+.confirm {
+    max-width: 400px;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-bottom: 10rem;
+}
+
+/* ============= end confirm components =============== */

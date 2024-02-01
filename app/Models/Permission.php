@@ -18,5 +18,5 @@ class Permission extends Model
      * CONIFG MODEL
      * ===========================
      */
-    protected $dateFormat = 'U';
+    // protected $dateFormat = 'U';
 }

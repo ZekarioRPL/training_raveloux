@@ -13,10 +13,10 @@ class Role extends Model
         'guard_name'
     ];
 
-    /**
-     * ===========================
-     * CONIFG MODEL
-     * ===========================
-     */
-    protected $dateFormat = 'U';
+    // /**
+    //  * ===========================
+    //  * CONIFG MODEL
+    //  * ===========================
+    //  */
+    // protected $dateFormat = 'U';
 }

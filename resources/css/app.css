@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    font-size: var(--text-sm);
+}
+
+:root {
+    /* ============ color ============ */
+    /* --secondary: ; */
+    --default-border-color: #e5e7eb;
+    --disabled: rgba(0, 0, 0, .07);
+
+    /* ============ font-size ============ */
+    --text-xxs: 10px;
+    --text-xs: 12px;
+    --text-sm: 14px;
+    --text-md: 16px;
+    --text-lg: 18px;
+    --text-xl: 20px;
+    --text-2xl: 24px;
+
+    /* ============ delay ============ */
+    --delay-vf: .1s;
+    --delay-f: .3s;
+    --delay-s: .5s;
+    --delay-vs: .7s;
+
+    /* ============ rounded ============ */
+    --rounded-sm: .125rem;
+    --rounded: .25rem;
+    --rounded-md: .375rem;
+    --rounded-lg: .5rem;
+    --rounded-xl: .75rem;
+
+    /* ============ blur ============ */
+    --blur: 10px;
+}

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->bigInteger('user_id');
-            $table->bigInteger('client_id');
-            $table->bigInteger('project_id');
+            $table->bigInteger('user_id')->unsigned()->index();
+            $table->foreignId('client_id')->constrained('clients');
+            $table->foreignId('project_id')->constrained('projects');
             $table->date('deadline');
             $table->string('status');
 

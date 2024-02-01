@@ -1,0 +1,66 @@
+/* ============= table components =============== */
+
+.table {
+    width: 100%;
+}
+
+.table tr {
+    @apply relative border-b;
+}
+
+.table>tbody>tr:hover {
+    @apply bg-gray-50;
+}
+
+.table th,
+.table td {
+    white-space: nowrap;
+    padding: .5rem 1.25rem;
+}
+
+.table th {
+    text-transform: capitalize;
+    text-align: left;
+}
+
+.btn-action-table {
+    @apply cursor-pointer inline-flex items-center justify-center rounded-full h-[2rem] aspect-square;
+}
+
+.btn-action-table:hover {
+    @apply bg-gray-200;
+}
+
+.btn-action-table>i {
+    @apply text-base;
+}
+
+/* ============= end table components =============== */
+
+
+
+
+/* ============= paginate components =============== */
+.item-paginate {
+    @apply flex cursor-pointer;
+    @apply w-[2.25rem] h-[2.25rem];
+    @apply text-sm rounded-full border border-gray-400;
+}
+
+.item-paginate.disabled {
+    @apply border-gray-300 text-gray-300;
+}
+
+.item-paginate>* {
+    @apply m-auto truncate;
+}
+
+.item-paginate:not(.disabled):hover {
+    border-color: var(--primary);
+    box-shadow: inset 0px 0px 1px var(--primary), 0px 0px 5px var(--primary);
+    text-shadow: 0 0 1px var(--primary);
+    color: var(--primary);
+}
+
+
+/* ============= paginate components =============== */
