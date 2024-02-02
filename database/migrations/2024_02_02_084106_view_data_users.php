@@ -22,11 +22,11 @@ return new class extends Migration
             us.phone_number,
             concat(us.first_name, ' ', us.last_name ) AS user_full_name
 
-            ur.role_id
+            -- ur.role_id
 
             FROM users AS u
             LEFT JOIN user_details AS us ON us.user_id = u.id
-            LEFT JOIN user_roles AS ur ON ur.user_id = u.id
+            -- LEFT JOIN user_roles AS ur ON ur.user_id = u.id
 
             ORDER BY u.id DESC
         ");

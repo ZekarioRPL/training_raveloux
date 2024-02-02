@@ -34,8 +34,13 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['middleware' => 'guest'], function () {
-    // Route::get('/login', [AuthController::class, 'login'])->name('login');
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
+    Route::get('/forget-password', function () {
+        return view('auth.forgetPassword');
+    })->name('forget-password');
     // Route::post('/auth', [AuthController::class, 'actionLogin'])->name('auth');
 
-Route::get('/asset/option/client', [OptionController::class, 'client']);
+    Route::get('/asset/option/client', [OptionController::class, 'client']);
 });

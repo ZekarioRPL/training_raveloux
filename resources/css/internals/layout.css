@@ -1,6 +1,6 @@
 /* ============= Side bar ================= */
 .sidebar {
-    @apply border-r  sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700;
+    @apply border-r  sm:translate-x-0 ;
 }
 
 
@@ -14,7 +14,7 @@
 /* ============= Navbar ================= */
 
 .navbar {
-    @apply fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700;
+    @apply fixed top-0 z-50 w-full bg-white border-b border-gray-200 ;
 }
 
 .navbar .header {
