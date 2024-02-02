@@ -44,7 +44,7 @@ section {
 }
 
 .input-form {
-    @apply border rounded text-base h-[2.25rem];
+    @apply border rounded text-sm;
 }
 
 select:focus,

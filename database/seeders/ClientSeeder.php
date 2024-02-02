@@ -26,8 +26,8 @@ class ClientSeeder extends Seeder
                 'company_name' => $faker->company(),
                 'company_address' => $faker->address(),
                 'company_city' => $faker->city(),
-                // 'company_zip',
-                // 'company_val'
+                // 'company_zip' => "101$i",
+                'company_val' => "101$i"
             ]);
         }
     }
