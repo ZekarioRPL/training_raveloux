@@ -19,9 +19,8 @@ return new class extends Migration
             $table->tinyInteger('terms_accepted')->nullable(); // tanya
             $table->rememberToken();
 
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

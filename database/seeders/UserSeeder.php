@@ -45,7 +45,7 @@ class UserSeeder extends Seeder
         $roleSimple = Role::where('guard_name', 'simple')->first();
         for($i = 1; $i < 10; $i++) {
             $user = User::create([
-                'email' => "simple_$i",
+                'email' => strtolower(str_replace(" ", "_", $faker->name()) . '@gmail.com'),
                 'password' => "password",
             ]);
 

@@ -22,9 +22,8 @@ return new class extends Migration
             $table->string('company_zip')->nullable(); // tanya
             $table->integer('company_val')->nullable(); // tanya
 
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

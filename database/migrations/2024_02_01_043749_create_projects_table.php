@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->bigInteger('user_id')->unsigned()->index();
-            $table->foreignId('client_id')->references('id')->on('clients');
+            $table->foreignId('client_id')->references('id')->on('clients')->onDelete('CASCADE')->onUpdate("CASCADE");
             $table->date('deadline');
             $table->string('status');
 
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
         });
     }
 

@@ -44,7 +44,7 @@ section {
 }
 
 .input-form {
-    @apply border rounded text-sm;
+    @apply border rounded text-sm border-gray-300;
 }
 
 select:focus,
@@ -88,7 +88,6 @@ input:disabled,
     line-height: initial;
     @apply inline-flex items-center justify-center rounded-md cursor-pointer whitespace-nowrap;
     @apply border shadow border-transparent text-white px-4 h-[2.5rem] capitalize;
-    background-color: var(--primary);
 }
 
 .btn>* {
@@ -367,3 +366,10 @@ button:disabled {
 }
 
 /* ============= end confirm components =============== */
+
+/* ########################### SIDEBAR NAVIGATION ########################### */
+
+
+.sidebar-item.active {
+    @apply bg-gray-600 text-white;
+}

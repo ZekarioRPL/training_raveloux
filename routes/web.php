@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Asset\OptionController;
 use App\Http\Controllers\Client\ManageClient;
+use App\Http\Controllers\Project\ManageProject;
+use App\Http\Controllers\Task\ManageTask;
+use App\Http\Controllers\User\ManageUser;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +23,9 @@ Route::get('dashboard', function () {
 });
 
 Route::resource('client', ManageClient::class);
+Route::resource('project', ManageProject::class);
+Route::resource('task', ManageTask::class);
+Route::resource('user', ManageUser::class);
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('home', function () {
@@ -29,4 +36,6 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'guest'], function () {
     // Route::get('/login', [AuthController::class, 'login'])->name('login');
     // Route::post('/auth', [AuthController::class, 'actionLogin'])->name('auth');
+
+Route::get('/asset/option/client', [OptionController::class, 'client']);
 });

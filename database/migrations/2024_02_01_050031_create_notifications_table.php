@@ -18,9 +18,8 @@ return new class extends Migration
             $table->bigInteger('notifiable_id');
             $table->text('data');
 
-            $table->timestamp('read_at')->nullable();
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

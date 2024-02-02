@@ -3,12 +3,35 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class ManageClient extends Controller
 {
+
+    public function validator($request)
+    {
+        $dataRequest = Validator::make($request->all(), [
+            'contact_name' => 'required',
+            'contact_email' => 'required|email',
+            'contact_phone_number' => 'required',
+            'company_name' => 'required',
+            'company_address' => 'required',
+            'company_city' => 'required',
+            'company_zip' => 'nullable',
+            'company_val' => 'nullable',
+        ]);
+
+        if ($dataRequest->fails()) {
+            abort(back()->withErrors($dataRequest)->withInput());
+        }
+
+        return $dataRequest;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -29,6 +52,7 @@ class ManageClient extends Controller
             # response datatable
             $clients = DB::table('clients')
                 ->select('*')
+                ->whereNull('deleted_at')
                 ->orderBy('id', 'DESC');
 
             $exceptActions = ['show'];
@@ -65,7 +89,21 @@ class ManageClient extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            # validate
+            $requestValidate = $this->validator($request)->safe()->toArray();
+
+            # insert
+            Client::create($requestValidate);
+
+            # response
+            return redirect()->route('client.index');
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return abort(500);
+        }
     }
 
     /**
@@ -96,7 +134,25 @@ class ManageClient extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            # find 
+            $client = Client::findOrFail($id);
+
+            # validate
+            $requestValidate = $this->validator($request)->safe()->toArray();
+
+            # insert
+            $client->update($requestValidate);
+
+            # response
+            return redirect()->route('client.index');
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return abort(500);
+        }
     }
 
     /**
@@ -104,6 +160,13 @@ class ManageClient extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        # find 
+        $client = Client::findOrFail($id);
+
+        # delete data
+        $client->delete();
+
+        # response
+        return redirect()->route('client.index');
     }
 }

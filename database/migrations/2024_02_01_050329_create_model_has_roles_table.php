@@ -15,7 +15,9 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained('roles');
             $table->string('model_type');
             $table->bigInteger('model_id');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -29,8 +29,8 @@ return new class extends Migration
             $table->json('responsive_images');
             $table->integer('order_column');
 
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
