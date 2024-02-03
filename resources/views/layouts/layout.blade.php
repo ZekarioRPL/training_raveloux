@@ -30,7 +30,7 @@
     @include('layouts.panel.navbar')
     @include('layouts.panel.sidebar')
 
-    <div class=" min-h-screen bg-gray-50 dark:bg-gray-900 p-2 mt-4 sm:ml-64">
+    <div class=" min-h-screen bg-gray-50 p-2 mt-4 sm:ml-64">
         <div class="p-4 mt-8">
             @yield('content')
         </div>

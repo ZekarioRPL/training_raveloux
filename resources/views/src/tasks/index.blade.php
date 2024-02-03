@@ -7,10 +7,10 @@
                 <div class="flex">
                     @if (auth()->user()->can('create-task'))
                         <a href="{{ Route('task.create') }}"
-                            class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-green-400 border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-green-600 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700"
+                            class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-green-400 border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-green-600 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-200 "
                             type="button" id="btnInsert">
                             <i data-feather="plus" width='20px'></i>
-                            Tambah
+                            Create Tasks
                         </a>
                     @endif
                 </div>
@@ -87,13 +87,23 @@
                                 data : '-';
                         },
                     },
+                    // {
+                    //     data: 'status',
+                    //     name: 'status',
+                    //     title: 'Status',
+                    //     render: function(data, type, row) {
+                    //         return data ? (data?.length > 40) ? ((data.substr(0, 40) + '...')) :
+                    //             data : '-';
+                    //     },
+                    // },
                     {
                         data: 'status',
                         name: 'status',
                         title: 'Status',
                         render: function(data, type, row) {
-                            return data ? (data?.length > 40) ? ((data.substr(0, 40) + '...')) :
-                                data : '-';
+                            return type === 'display' ?
+                                '<div class="bg-green-500 text-white p-1 rounded uppercase text-center">' + data + '</div>' :
+                                data;
                         },
                     },
                     {
