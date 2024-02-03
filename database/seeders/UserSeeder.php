@@ -34,15 +34,10 @@ class UserSeeder extends Seeder
             'phone_number' => $faker->phoneNumber(),
         ]);
 
-        $roleAdmin = Role::where('guard_name', 'admin')->first();
-
-        UserRole::create([
-            'role_id' => $roleAdmin->id,
-            'user_id' => $admin->id
-        ]);
+        # role assigned
+        $admin->assignRole('admin');
 
         # insert random account
-        $roleSimple = Role::where('guard_name', 'simple')->first();
         for($i = 1; $i < 10; $i++) {
             $user = User::create([
                 'email' => strtolower(str_replace(" ", "_", $faker->name()) . '@gmail.com'),
@@ -57,10 +52,8 @@ class UserSeeder extends Seeder
                 'phone_number' => $faker->phoneNumber(),
             ]);
 
-            UserRole::create([
-                'role_id' => $roleSimple->id,
-                'user_id' => $user->id
-            ]);
+            # role assigned
+            $user->assignRole('simple');
         }
     }
 }

@@ -100,8 +100,8 @@ class ManageProject extends Controller
      */
     public function store(Request $request)
     {
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
             # validate
             $requestValidated = $this->validator($request)->safe()->toArray();
 
@@ -111,11 +111,11 @@ class ManageProject extends Controller
             # return
             return redirect()->route('project.index');
 
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return abort(500);
-        }
+        //     DB::commit();
+        // } catch (\Throwable $e) {
+        //     DB::rollBack();
+        //     return abort(500);
+        // }
     }
 
     /**
@@ -156,8 +156,8 @@ class ManageProject extends Controller
      */
     public function update(Request $request, string $id)
     {
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
             # find
             $data = Project::findOrFail($id);
 
@@ -170,11 +170,11 @@ class ManageProject extends Controller
             # return
             return redirect()->route('project.index');
 
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return abort(500);
-        }
+        //     DB::commit();
+        // } catch (\Throwable $e) {
+        //     DB::rollBack();
+        //     return abort(500);
+        // }
     }
 
     /**

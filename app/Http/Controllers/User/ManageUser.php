@@ -16,13 +16,11 @@ class ManageUser extends Controller
     public function validator(Request $request)
     {
         $dataRequest = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
             'address' => 'nullable',
             'phone_number' => 'required',
-            'role_id' => 'required',
+            'role' => 'required',
         ]);
 
         if ($dataRequest->fails()) {
@@ -61,7 +59,7 @@ class ManageUser extends Controller
                 ->addColumn('action', function ($datatable) use ($exceptActions) {
                     return view('components.elements.externals.TableActionBtn', [
                         'id' => $datatable->id,
-                        'route' => 'task',
+                        'route' => 'user',
                         'exceptActions' => $exceptActions
                     ]);
                 })
@@ -78,7 +76,6 @@ class ManageUser extends Controller
     public function create()
     {
         $roles = DB::table('roles')
-            ->whereNull('deleted_at')
             ->select('*')
             ->get();
 
@@ -93,34 +90,32 @@ class ManageUser extends Controller
      */
     public function store(Request $request)
     {
-        DB::beginTransaction();
-        try {
-            # validate
-            $requestValidate = $this->validator($request)->safe();
+        // DB::beginTransaction();
+        // try {
+        # validate
+        $dataUser = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+        $requestValidate = $this->validator($request)->safe();
 
-            # insert User
-            $dataUser = $requestValidate
-                ->only(['email', 'password']);
-            $user = User::create($dataUser);
+        # insert User
+        $user = User::create($dataUser);
 
-            $dataUserDetail = $requestValidate
-                ->merge(["user_id" => $user->id])
-                ->only((new UserDetail())->fillable);
-            UserDetail::create($dataUserDetail);
+        $dataUserDetail = $requestValidate
+            ->merge(["user_id" => $user->id])
+            ->only((new UserDetail())->fillable);
+        UserDetail::create($dataUserDetail);
 
-            $dataRole = $requestValidate
-                ->merge(["user_id" => $user->id])
-                ->only((new UserDetail())->fillable);
-            UserRole::create($dataRole);
+        $user->assignRole($requestValidate->role);
 
-
-            # return
-            return redirect()->route('user.index');
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            abort(500);
-        }
+        # return
+        return redirect()->route('user.index');
+        //     DB::commit();
+        // } catch (\Throwable $e) {
+        //     DB::rollBack();
+        //     abort(500);
+        // }
     }
 
     /**
@@ -137,15 +132,18 @@ class ManageUser extends Controller
     public function edit(string $id)
     {
         $roles = DB::table('roles')
-            ->whereNull('deleted_at')
             ->select('*')
             ->get();
-        $user = User::findOrFail($id);
+        $userRole = User::findOrFail($id);
+        $user = DB::table('view_data_users')
+            ->where('id', $id)
+            ->first();
 
         return view('src.users.formInput', [
             'title' => 'User',
             'roles' => $roles,
-            'user' => $user
+            'user' => $user,
+            'userRole' => $userRole
         ]);
     }
 
@@ -154,28 +152,43 @@ class ManageUser extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // # find
-        // $user = User::findOrFail($id);
-        // # validate
-        // $requestValidate = $this->validator($request)->safe();
+        // DB::beginTransaction();
+        // try {
+        # find
+        $user = User::findOrFail($id);
 
-        // # insert User
-        // $dataUser = $requestValidate
-        //     ->only((new User())->fillable);
-        // $user->update($dataUser);
+        # validate
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'nullable',
+        ]);
 
-        // $dataUserDetail = $requestValidate
-        //     ->merge(["user_id" => $user->id])
-        //     ->only((new UserDetail())->fillable);
-        // UserDetail::create($dataUserDetail);
+        $requestValidate = $this->validator($request)->safe();
 
-        // $dataRole = $requestValidate
-        //     ->merge(["user_id" => $user->id])
-        //     ->only((new UserDetail())->fillable);
-        // UserRole::create($dataRole);
+        # Update User
+        $dataUser = ['email' => $request->email];
+        if ($request->password) {
+            $dataUser['password'] = $request->password;
+        }
+        $user->update($dataUser);
 
-        // # return
-        // return redirect()->route('user.index');
+        # Update User Detail
+        $userDetail = UserDetail::where('user_id', $user->id)->first();
+        $dataUserDetail = $requestValidate
+            ->merge(["user_id" => $user->id])
+            ->only((new UserDetail())->fillable);
+        $userDetail->update($dataUserDetail);
+
+        # role assigned
+        $user->syncRoles($requestValidate->role);
+        
+        # return
+        return redirect()->route('user.index');
+        //     DB::commit();
+        // } catch (\Throwable $e) {
+        //     DB::rollBack();
+        //     abort(500);
+        // }
     }
 
     /**

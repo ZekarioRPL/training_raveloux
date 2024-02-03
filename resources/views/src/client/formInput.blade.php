@@ -74,22 +74,15 @@
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
                         </div>
-                        {{-- TEXT AREA --}}
-                        {{-- <div>
-                            <label for="description">Description</label>
-                            <textarea class="input-form min-h-7  @error('description') border-red-500 @enderror" name="description" id="description"
-                                placeholder="" value="{{ old('name', $client->contact_email ?? '') }}"></textarea>
-                            @error('description')
-                                <p class="invalid-message text-red-700">{{ $message }}</p>
-                            @enderror
-                        </div> --}}
                     </div>
                     <div class="card-footer">
                         @csrf
                         @isset($client)
                             @method('put')
                         @endisset
-                        <button class="btn bg-blue-600">Save</button>
+                        @if(auth()->user()->can('create-client') || auth()->user()->can('update-client'))
+                            <button class="btn bg-blue-600">Save</button>
+                        @endif
                     </div>
                 </form>
             </div>

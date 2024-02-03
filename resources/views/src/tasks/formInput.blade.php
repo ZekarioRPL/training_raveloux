@@ -103,7 +103,9 @@
                         @isset($task)
                             @method('put')
                         @endisset
-                        <button class="btn bg-blue-600">Save</button>
+                        @if(auth()->user()->can('create-task') || auth()->user()->can('update-task'))
+                            <button class="btn bg-blue-600">Save</button>
+                        @endif
                     </div>
                 </form>
             </div>

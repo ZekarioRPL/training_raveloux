@@ -87,7 +87,9 @@
                         @isset($project)
                             @method('put')
                         @endisset
-                        <button class="btn bg-blue-600">Save</button>
+                        @if(auth()->user()->can('create-project') || auth()->user()->can('update-project'))
+                            <button class="btn bg-blue-600">Save</button>
+                        @endif
                     </div>
                 </form>
             </div>

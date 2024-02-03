@@ -7,7 +7,7 @@
                 <div class="card-header">
                     <div class="card-title">{{ isset($user) ? 'Edit' : 'Create' }} {{ $title }}</div>
                 </div>
-                <form action="{{ isset($user) ? Route('user.update', $user->id) : Route('user.store') }}" method="post">
+                <form action="{{ isset($user) ? Route('user.update', $user->id) : Route('user.store') }}" method="POST">
                     <div class="card-body flex flex-col space-y-3 md:flex">
                         <div>
                             <label for="email">Email</label>
@@ -20,7 +20,7 @@
                         <div>
                             <label for="password">password</label>
                             <input type="password" class="input-form @error('password') border-red-700 @enderror"
-                                name="password" id="password" value="{{ old('password', $user->password ?? '') }}">
+                                name="password" id="password" value="{{ old('password') }}">
                             @error('password')
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
@@ -59,17 +59,18 @@
                             @enderror
                         </div>
                         <div>
-                            <label for="role_id">Role</label>
-                            <select id="role_id" name="role_id"
-                                class="input-form @error('role_id') border-red-700 @enderror">
+                            <label for="role">Role</label>
+                            <select id="role" name="role"
+                                class="input-form @error('role') border-red-700 @enderror">
                                 @foreach ($roles as $role)
-                                    @if ($role === old('role', $user->role ?? null))
-                                        <option value="{{ $role->id }}" selected>{{ $role->name }}</option>
+                                    @if (($role->name === $role->name) === $userRole->hasRole($role->name))
+                                        <option value="{{ $role->name }}" selected>{{ $role->name }}</option>
+                                    @else
+                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
                                     @endif
-                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
                                 @endforeach
                             </select>
-                            @error('role_id')
+                            @error('role')
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
                         </div>
@@ -79,7 +80,10 @@
                         @isset($user)
                             @method('put')
                         @endisset
-                        <button class="btn bg-blue-600">Save</button>
+                        @if (auth()->user()->can('create-user') ||
+                                auth()->user()->can('update-user'))
+                            <button class="btn bg-blue-600">Save</button>
+                        @endif
                     </div>
                 </form>
             </div>

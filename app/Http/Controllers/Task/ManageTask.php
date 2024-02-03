@@ -104,22 +104,23 @@ class ManageTask extends Controller
      */
     public function store(Request $request)
     {
-        DB::beginTransaction();
-        try {
-            # validate
-            $requestValidate = $this->validator($request)->safe()->toArray();
+        # validate
+        $requestValidate = $this->validator($request)->safe()->toArray();
 
-            # insert
-            Task::create($requestValidate);
+        // DB::beginTransaction();
+        // try {
 
-            # response
-            return redirect()->route('task.index');
+        # insert
+        Task::create($requestValidate);
 
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return abort(500);
-        }
+        # response
+        return redirect()->route('task.index');
+
+        //     DB::commit();
+        // } catch (\Throwable $e) {
+        //     DB::rollBack();
+        //     return abort(500);
+        // }
     }
 
     /**
@@ -163,25 +164,25 @@ class ManageTask extends Controller
      */
     public function update(Request $request, string $id)
     {
-        DB::beginTransaction();
-        try {
-            # find
-            $task = Task::findOrFail($id);
+        # validate
+        $requestValidate = $this->validator($request)->safe()->toArray();
 
-            # validate
-            $requestValidate = $this->validator($request)->safe()->toArray();
+        // DB::beginTransaction();
+        // try {
+        # find
+        $task = Task::findOrFail($id);
 
-            # insert
-            $task->update($requestValidate);
+        # insert
+        $task->update($requestValidate);
 
-            # response
-            return redirect()->route('task.index');
+        # response
+        return redirect()->route('task.index');
 
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return abort(500);
-        }
+        //     DB::commit();
+        // } catch (\Throwable $e) {
+        //     DB::rollBack();
+        //     return abort(500);
+        // }
     }
 
     /**

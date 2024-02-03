@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\role_has_permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -16,37 +15,54 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            "Admin" => [
-                'Manage Users',
-                'Manage Client',
-                'Manage Project',
-                'Manage Profile',
-                'Manage Task',
+            "admin" => [
+                'create-user',
+                'update-user',
+                'delete-user',
+                'view-user',
+
+                'create-client',
+                'update-client',
+                'delete-client',
+                'view-client',
+
+                'create-project',
+                'update-project',
+                'delete-project',
+                'view-project',
+
+                'create-task',
+                'update-task',
+                'delete-task',
+                'view-task',
             ],
-            "Simple" => [
-                'Manage Client',
-                'Manage Project',
-                'Manage Profile',
-                'Manage Task',
+            "simple" => [
+                'create-client',
+                'update-client',
+                'delete-client',
+                'view-client',
+
+                // 'create-project',
+                // 'update-project',
+                // 'delete-project',
+                'view-project',
+
+                // 'create-task',
+                // 'update-task',
+                // 'delete-task',
+                'view-task',
             ]
         ];
 
         foreach($roles as $roleName => $features ) {
-            # insert role
-            $role = Role::create([
-                'name' => $roleName,
-                'guard_name' => strtolower(str_replace(" ", "-", $roleName))
-            ]);
+            # Role
+            $role = Role::create(['name' => $roleName ]);
             
             foreach($features as $featureName) {
-                $permission = Permission::create([
-                    'name' => $featureName,
-                    'guard_name' => strtolower(str_replace(" ", "-", $featureName))
-                ]);
-                role_has_permission::create([
-                    'permission_id' => $permission->id,
-                    'role_id' => $role->id
-                ]);
+                # Permission
+                $permission = Permission::firstOrCreate(['name' => $featureName]);
+
+                $role->givePermissionTo($permission);
             }
         }
     }

@@ -89,8 +89,8 @@ class ManageClient extends Controller
      */
     public function store(Request $request)
     {
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
             # validate
             $requestValidate = $this->validator($request)->safe()->toArray();
 
@@ -99,11 +99,11 @@ class ManageClient extends Controller
 
             # response
             return redirect()->route('client.index');
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return abort(500);
-        }
+        //     DB::commit();
+        // } catch (\Throwable $e) {
+        //     DB::rollBack();
+        //     return abort(500);
+        // }
     }
 
     /**
@@ -134,8 +134,8 @@ class ManageClient extends Controller
      */
     public function update(Request $request, string $id)
     {
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
             # find 
             $client = Client::findOrFail($id);
 
@@ -148,11 +148,11 @@ class ManageClient extends Controller
             # response
             return redirect()->route('client.index');
 
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return abort(500);
-        }
+        //     DB::commit();
+        // } catch (\Throwable $e) {
+        //     DB::rollBack();
+        //     return abort(500);
+        // }
     }
 
     /**
