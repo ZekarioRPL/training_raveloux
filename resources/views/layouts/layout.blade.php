@@ -17,12 +17,17 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     {{-- Style CSS --}}
-    @vite(['resources/js/app.js', 'resources/css/externals/table/commonTable.css', 'resources/css/externals/elements/select2/select2.css'])
+    @vite(['resources/js/app.js', 'resources/css/externals/table/commonTable.css', 'resources/css/externals/select/select2.css'])
 
     @vite(['resources/css/app.css', 'resources/css/internals/main.css', 'resources/css/internals/layout.css', 'resources/js/app.js'])
 
     <!-- Custom Style Current Page -->
     @yield('style')
+
+    <script>
+        var base_url = '{{ url('') }}';
+        var token = '{{ csrf_token() }}';
+    </script>
 </head>
 
 <body>

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Task;
 
 use App\Http\Controllers\Controller;
+use App\Mail\TaskMail;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -35,15 +37,6 @@ class ManageTask extends Controller
     public function index(Request $request)
     {
         if (request()->ajax()) {
-            # set column selected
-            $columns = ["action"];
-            if ($request->columns) {
-                foreach ($request->columns as $key => $column) {
-                    if ($column["name"]) {
-                        $columns[] = $column["name"];
-                    }
-                }
-            }
 
             # query data
             $datatables = DB::table('tasks AS t')
@@ -52,13 +45,17 @@ class ManageTask extends Controller
                 ->leftJoin('projects AS p', 'p.id', 't.project_id')
                 ->select('t.*', 'c.contact_name', 'u.user_full_name AS user_name', 'p.title AS project_name')
                 ->whereNull('t.deleted_at')
-                ->orderBy('id', 'DESC');
+                ->orderBy('t.updated_at', 'DESC');
 
             $exceptActions = ['show'];
 
             return DataTables::of($datatables)
-                ->only($columns)
                 ->addIndexColumn()
+                ->addColumn('status', function ($datatable) {
+                    return view('components.elements.externals.status', [
+                        'status' => $datatable->status
+                    ]);
+                })
                 ->addColumn('action', function ($datatable) use ($exceptActions) {
                     return view('components.elements.externals.TableActionBtn', [
                         'id' => $datatable->id,
@@ -66,6 +63,7 @@ class ManageTask extends Controller
                         'exceptActions' => $exceptActions
                     ]);
                 })
+                ->escapeColumns([])
                 ->make();
         }
 
@@ -105,22 +103,48 @@ class ManageTask extends Controller
     public function store(Request $request)
     {
         # validate
-        $requestValidate = $this->validator($request)->safe()->toArray();
+        $requestValidate = $this->validator($request)->safe();
+        $request->validate([
+            'file_input' => 'required|image|mimes:png,jpg,jpeg'
+        ]);
 
-        // DB::beginTransaction();
-        // try {
+        DB::beginTransaction();
+        try {
 
-        # insert
-        Task::create($requestValidate);
+            # insert
+            $dataTask = $requestValidate->only((new Task())->fillable);
+            $task = Task::create($dataTask);
 
-        # response
-        return redirect()->route('task.index');
+            # insert file
+            $filename = $request->file('file_input');
+            $task->addMedia($filename)->toMediaCollection('task_media');
 
-        //     DB::commit();
-        // } catch (\Throwable $e) {
-        //     DB::rollBack();
-        //     return abort(500);
-        // }
+            # notification mail
+            $descendantTask = DB::table('tasks AS t')
+                ->leftJoin('view_data_users AS u', 'u.id', 't.user_id')
+                ->leftJoin('clients AS c', 'c.id', 't.client_id')
+                ->leftJoin('projects AS p', 'p.id', 't.project_id')
+                ->select('t.*', 'c.contact_name', 'u.user_full_name AS user_name', 'p.title AS project_name')
+                ->whereNull('t.deleted_at')
+                ->where('t.id', $task->id)
+                ->first();
+
+            $task->contact_name = $descendantTask->contact_name;
+            $task->user_name = $descendantTask->user_name;
+            $task->project_name = $descendantTask->project_name;
+
+            $email = new TaskMail($task);
+            Mail::to('sefsaham@gmail.com')->send($email);
+
+            # Commit
+            DB::commit();
+
+            # response
+            return redirect()->route('task.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['status' => "Project cannot be created"]);
+        }
     }
 
     /**
@@ -149,6 +173,7 @@ class ManageTask extends Controller
             ->get();
         $statuses = ['open', 'on', 'off'];
 
+        // dd($task->getFirstMediaUrl('services'));
         return view('src.tasks.formInput', [
             'title' => 'Task',
             'task' => $task,
@@ -166,23 +191,34 @@ class ManageTask extends Controller
     {
         # validate
         $requestValidate = $this->validator($request)->safe()->toArray();
+        $request->validate([
+            'file_input' => 'nullable|image|mimes:png,jpg,jpeg'
+        ]);
 
-        // DB::beginTransaction();
-        // try {
         # find
         $task = Task::findOrFail($id);
 
-        # insert
-        $task->update($requestValidate);
+        DB::beginTransaction();
+        try {
 
-        # response
-        return redirect()->route('task.index');
+            # update data
+            $task->update($requestValidate);
 
-        //     DB::commit();
-        // } catch (\Throwable $e) {
-        //     DB::rollBack();
-        //     return abort(500);
-        // }
+            # update file
+            $filename = $request->file('file_input');
+            if ($request->hasFile('file_input')) {
+                $task->addMedia($filename)->toMediaCollection('task_media');
+            }
+
+            # Commit
+            DB::commit();
+
+            # return
+            return redirect()->route('task.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['status' => "Project cannot be updated"]);
+        }
     }
 
     /**
@@ -199,4 +235,15 @@ class ManageTask extends Controller
         # response
         return redirect()->route('task.index');
     }
+
+    // /**
+    //  * ==============================
+    //  * Notification with Send Email
+    //  * ==============================
+    //  */
+    // public function notification()
+    // {
+    //     $email = new TaskMail(['sef', 'dani']);
+    //     Mail::to('sefsaham@gmail.com')->send($email);
+    // }
 }

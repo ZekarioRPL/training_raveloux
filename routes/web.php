@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Asset\OptionController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Client\ManageClient;
 use App\Http\Controllers\Project\ManageProject;
 use App\Http\Controllers\Task\ManageTask;
@@ -76,15 +77,27 @@ Route::group(['middleware' => 'auth'], function () {
  * ================
  */
 Route::group(['middleware' => 'guest'], function () {
-
+    
+    /**
+     * ================
+     * LOGIN
+     * ================
+     */
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/login', [AuthController::class, 'onLogin'])->name('auth');
 
-    Route::get('/forget-password', function () {
-        return view('auth.forgetPassword');
-    })->name('forget-password');
+    /**
+     * ================
+     * FORGOT PASSWORD
+     * ================
+     */
+    Route::get('/forget-password', [ResetPasswordController::class, 'index'])->name('password.request');;
+    Route::post('/forgot-password', [ResetPasswordController::class, 'store'])->name('password.email');
+    Route::get('/reset-password', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 
-    Route::get('/asset/option/client', [OptionController::class, 'client']);
 });
+
+Route::post('/asset/option/client', [OptionController::class, 'usersSelect']);
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');

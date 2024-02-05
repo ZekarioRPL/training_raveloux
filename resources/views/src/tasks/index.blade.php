@@ -87,24 +87,12 @@
                                 data : '-';
                         },
                     },
-                    // {
-                    //     data: 'status',
-                    //     name: 'status',
-                    //     title: 'Status',
-                    //     render: function(data, type, row) {
-                    //         return data ? (data?.length > 40) ? ((data.substr(0, 40) + '...')) :
-                    //             data : '-';
-                    //     },
-                    // },
                     {
                         data: 'status',
-                        name: 'status',
-                        title: 'Status',
-                        render: function(data, type, row) {
-                            return type === 'display' ?
-                                '<div class="bg-green-500 text-white p-1 rounded uppercase text-center">' + data + '</div>' :
-                                data;
-                        },
+                        title: 'status',
+                        caldendarable: false,
+                        orderable: false,
+                        exportable: false,
                     },
                     {
                         data: 'action',

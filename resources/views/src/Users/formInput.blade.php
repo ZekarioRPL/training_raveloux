@@ -7,6 +7,13 @@
                 <div class="card-header">
                     <div class="card-title">{{ isset($user) ? 'Edit' : 'Create' }} {{ $title }}</div>
                 </div>
+                @if (session()->has('status'))
+                    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50">
+                        <ul>
+                            <li>{{ session()->get('status') }}</li>
+                        </ul>
+                    </div>
+                @endif
                 <form action="{{ isset($user) ? Route('user.update', $user->id) : Route('user.store') }}" method="POST">
                     <div class="card-body flex flex-col space-y-3 md:flex">
                         <div>

@@ -35,15 +35,6 @@ class ManageProject extends Controller
     public function index(Request $request)
     {
         if (request()->ajax()) {
-            # set column selected
-            $columns = ["action"];
-            if ($request->columns) {
-                foreach ($request->columns as $key => $column) {
-                    if ($column["name"]) {
-                        $columns[] = $column["name"];
-                    }
-                }
-            }
 
             # query data
             $projects = DB::table('projects AS p')
@@ -51,13 +42,17 @@ class ManageProject extends Controller
                 ->leftJoin('clients AS c', 'c.id', 'p.client_id')
                 ->select('p.*', 'c.contact_name', 'u.user_full_name AS user_name')
                 ->whereNull('p.deleted_at')
-                ->orderBy('id', 'DESC');
+                ->orderBy('p.updated_at', 'DESC');
 
             $exceptActions = ['show'];
 
             return DataTables::of($projects)
-                ->only($columns)
                 ->addIndexColumn()
+                ->addColumn('status', function ($project) {
+                    return view('components.elements.externals.status', [
+                        'status' => $project->status
+                    ]);
+                })
                 ->addColumn('action', function ($project) use ($exceptActions) {
                     return view('components.elements.externals.TableActionBtn', [
                         'id' => $project->id,
@@ -100,22 +95,24 @@ class ManageProject extends Controller
      */
     public function store(Request $request)
     {
-        // DB::beginTransaction();
-        // try {
-            # validate
-            $requestValidated = $this->validator($request)->safe()->toArray();
+        # validate
+        $requestValidated = $this->validator($request)->safe()->toArray();
+
+        DB::beginTransaction();
+        try {
 
             # insert Project
             Project::create($requestValidated);
 
+            # Commit
+            DB::commit();
+
             # return
             return redirect()->route('project.index');
-
-        //     DB::commit();
-        // } catch (\Throwable $e) {
-        //     DB::rollBack();
-        //     return abort(500);
-        // }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['status' => "Client cannot be created"]);
+        }
     }
 
     /**
@@ -156,25 +153,26 @@ class ManageProject extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // DB::beginTransaction();
-        // try {
-            # find
-            $data = Project::findOrFail($id);
+        # find
+        $data = Project::findOrFail($id);
 
-            # validate
-            $requestValidated = $this->validator($request)->safe()->toArray();
-
-            # insert Project
+        # validate
+        $requestValidated = $this->validator($request)->safe()->toArray();
+        
+        DB::beginTransaction();
+        try {
+            # update Project
             $data->update($requestValidated);
+
+            # Commit
+            DB::commit();
 
             # return
             return redirect()->route('project.index');
-
-        //     DB::commit();
-        // } catch (\Throwable $e) {
-        //     DB::rollBack();
-        //     return abort(500);
-        // }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['status' => "Project cannot be updated"]);
+        }
     }
 
     /**

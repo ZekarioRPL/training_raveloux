@@ -9,14 +9,19 @@
 
 <section class="bg-gray-50 ">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 ">
-
-        </a>
         <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 ">
             <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <h1 class="text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
                     Welcome, Log In Now
                 </h1>
+                @if (session()->has('status'))
+                    <div
+                        class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400">
+                        <ul>
+                            <li>{{ session()->get('status') }}</li>
+                        </ul>
+                    </div>
+                @endif
                 <form class="space-y-4 md:space-y-6" action="{{ Route('auth') }}" method="POST">
                     @csrf
                     <div class="mb-5">
@@ -39,7 +44,7 @@
                     </div>
                     <div class="flex justify-end items-end mb-5 ">
                         <div class="text-blue-500 underline hover:text-blue-800">
-                            <a href="{{ Route('forget-password') }}">Forget Password ?</a>
+                            <a href="{{ Route('password.request') }}">Forget Password ?</a>
                         </div>
                     </div>
                     <button type="submit"

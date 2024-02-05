@@ -15,12 +15,12 @@ class ManageClient extends Controller
     public function validator($request)
     {
         $dataRequest = Validator::make($request->all(), [
-            'contact_name' => 'required',
-            'contact_email' => 'required|email',
+            'contact_name' => 'required|string',
+            'contact_email' => 'nullable|email',
             'contact_phone_number' => 'required',
-            'company_name' => 'required',
+            'company_name' => 'required|string',
             'company_address' => 'required',
-            'company_city' => 'required',
+            'company_city' => 'required|string',
             'company_zip' => 'nullable',
             'company_val' => 'nullable',
         ]);
@@ -38,27 +38,15 @@ class ManageClient extends Controller
     public function index(Request $request)
     {
         if (request()->ajax()) {
-            # set column selected
-            $columns = ["action"];
-            if ($request->columns) {
-                foreach ($request->columns as $key => $column) {
-                    if ($column["name"]) {
-                        $columns[] = $column["name"];
-                    }
-                }
-            }
-
-
             # response datatable
             $clients = DB::table('clients')
                 ->select('*')
                 ->whereNull('deleted_at')
-                ->orderBy('id', 'DESC');
+                ->orderBy('updated_at', 'DESC');
 
             $exceptActions = ['show'];
 
             return DataTables::of($clients)
-                ->only($columns)
                 ->addIndexColumn()
                 ->addColumn('action', function ($client) use ($exceptActions) {
                     return view('components.elements.externals.TableActionBtn', [
@@ -89,21 +77,23 @@ class ManageClient extends Controller
      */
     public function store(Request $request)
     {
-        // DB::beginTransaction();
-        // try {
-            # validate
-            $requestValidate = $this->validator($request)->safe()->toArray();
+        # validate
+        $requestValidate = $this->validator($request)->safe()->toArray();
 
+        DB::beginTransaction();
+        try {
             # insert
             Client::create($requestValidate);
 
+            # Commit
+            DB::commit();
+
             # response
             return redirect()->route('client.index');
-        //     DB::commit();
-        // } catch (\Throwable $e) {
-        //     DB::rollBack();
-        //     return abort(500);
-        // }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['status' => "Client cannot be created"]);
+        }
     }
 
     /**
@@ -134,25 +124,26 @@ class ManageClient extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // DB::beginTransaction();
-        // try {
-            # find 
-            $client = Client::findOrFail($id);
+        # find 
+        $client = Client::findOrFail($id);
 
-            # validate
-            $requestValidate = $this->validator($request)->safe()->toArray();
+        # validate
+        $requestValidate = $this->validator($request)->safe()->toArray();
 
-            # insert
+        DB::beginTransaction();
+        try {
+            # update
             $client->update($requestValidate);
 
-            # response
-            return redirect()->route('client.index');
+            # Commit
+            DB::commit();
 
-        //     DB::commit();
-        // } catch (\Throwable $e) {
-        //     DB::rollBack();
-        //     return abort(500);
-        // }
+            # return
+            return redirect()->route('client.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['status' => "Client cannot be updated"]);
+        }
     }
 
     /**

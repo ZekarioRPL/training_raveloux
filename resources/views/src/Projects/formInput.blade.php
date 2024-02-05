@@ -7,6 +7,13 @@
                 <div class="card-header">
                     <div class="card-title">{{ isset($project) ? 'Edit' : 'Create' }} {{ $title }}</div>
                 </div>
+                @if (session()->has('status'))
+                    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50">
+                        <ul>
+                            <li>{{ session()->get('status') }}</li>
+                        </ul>
+                    </div>
+                @endif
                 <form action="{{ isset($project) ? Route('project.update', $project->id) : Route('project.store') }}"
                     method="post">
                     <div class="card-body flex flex-col space-y-3 md:flex">
@@ -42,8 +49,9 @@
                                 @foreach ($users as $user)
                                     @if ($user->id === old('user_id', $project->user_id ?? null))
                                         <option value="{{ $user->id }}" selected>{{ $user->user_full_name }}</option>
+                                    @else
+                                        <option value="{{ $user->id }}">{{ $user->user_full_name }}</option>
                                     @endif
-                                    <option value="{{ $user->id }}">{{ $user->user_full_name }}</option>
                                 @endforeach
                             </select>
                             @error('user_id')
@@ -58,8 +66,9 @@
                                 @foreach ($clients as $client)
                                     @if ($client->id === old('client_id', $project->client_id ?? null))
                                         <option value="{{ $client->id }}" selected>{{ $client->contact_name }}</option>
+                                    @else
+                                        <option value="{{ $client->id }}">{{ $client->contact_name }}</option>
                                     @endif
-                                    <option value="{{ $client->id }}">{{ $client->contact_name }}</option>
                                 @endforeach
                             </select>
                             @error('client_id')
@@ -72,9 +81,10 @@
                                 class="input-form @error('status') border-red-700 @enderror">
                                 @foreach ($statuses as $status)
                                     @if ($status === old('status', $project->status ?? null))
-                                        <option value="{{ $status}}" selected>{{ $status }}</option>
+                                        <option value="{{ $status }}" selected>{{ $status }}</option>
+                                    @else
+                                        <option value="{{ $status }}">{{ $status }}</option>
                                     @endif
-                                    <option value="{{ $status }}">{{ $status }}</option>
                                 @endforeach
                             </select>
                             @error('status')
@@ -87,7 +97,8 @@
                         @isset($project)
                             @method('put')
                         @endisset
-                        @if(auth()->user()->can('create-project') || auth()->user()->can('update-project'))
+                        @if (auth()->user()->can('create-project') ||
+                                auth()->user()->can('update-project'))
                             <button class="btn bg-blue-600">Save</button>
                         @endif
                     </div>
@@ -99,6 +110,12 @@
 
 @section('script')
     <script>
+        $('#user_id').select2({
+            placeholder: 'Select Users'
+        });
+        $('#client_id').select2({
+            placeholder: 'Select Clients'
+        });
         $('#sidebar-projects').addClass('active')
     </script>
 @endsection

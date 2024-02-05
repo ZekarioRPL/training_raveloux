@@ -34,26 +34,15 @@ class ManageUser extends Controller
     public function index(Request $request)
     {
         if (request()->ajax()) {
-            # set column selected
-            $columns = ["action"];
-            if ($request->columns) {
-                foreach ($request->columns as $key => $column) {
-                    if ($column["name"]) {
-                        $columns[] = $column["name"];
-                    }
-                }
-            }
-
             # query data
             $datatables = DB::table('view_data_users')
                 ->whereNull('deleted_at')
                 ->select('*')
-                ->orderBy('id', 'DESC');
+                ->orderBy('updated_at', 'DESC');
 
             $exceptActions = ['show'];
 
             return DataTables::of($datatables)
-                ->only($columns)
                 ->addIndexColumn()
                 ->addColumn('action', function ($datatable) use ($exceptActions) {
                     return view('components.elements.externals.TableActionBtn', [
@@ -89,8 +78,6 @@ class ManageUser extends Controller
      */
     public function store(Request $request)
     {
-        // DB::beginTransaction();
-        // try {
         # validate
         $dataUser = $request->validate([
             'email' => 'required|email',
@@ -98,23 +85,27 @@ class ManageUser extends Controller
         ]);
         $requestValidate = $this->validator($request)->safe();
 
-        # insert User
-        $user = User::create($dataUser);
+        DB::beginTransaction();
+        try {
+            # insert User
+            $user = User::create($dataUser);
 
-        $dataUserDetail = $requestValidate
-            ->merge(["user_id" => $user->id])
-            ->only((new UserDetail())->fillable);
-        UserDetail::create($dataUserDetail);
+            $dataUserDetail = $requestValidate
+                ->merge(["user_id" => $user->id])
+                ->only((new UserDetail())->fillable);
+            UserDetail::create($dataUserDetail);
 
-        $user->assignRole($requestValidate->role);
+            $user->assignRole($requestValidate->role);
 
-        # return
-        return redirect()->route('user.index');
-        //     DB::commit();
-        // } catch (\Throwable $e) {
-        //     DB::rollBack();
-        //     abort(500);
-        // }
+            # Commit
+            DB::commit();
+
+            # return
+            return redirect()->route('user.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['status' => "Project cannot be created"]);
+        }
     }
 
     /**
@@ -151,11 +142,6 @@ class ManageUser extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // DB::beginTransaction();
-        // try {
-        # find
-        $user = User::findOrFail($id);
-
         # validate
         $request->validate([
             'email' => 'required|email',
@@ -164,30 +150,37 @@ class ManageUser extends Controller
 
         $requestValidate = $this->validator($request)->safe();
 
-        # Update User
-        $dataUser = ['email' => $request->email];
-        if ($request->password) {
-            $dataUser['password'] = $request->password;
+        DB::beginTransaction();
+        try {
+            # find
+            $user = User::findOrFail($id);
+
+            # Update User
+            $dataUser = ['email' => $request->email];
+            if ($request->password) {
+                $dataUser['password'] = $request->password;
+            }
+            $user->update($dataUser);
+
+            # Update User Detail
+            $userDetail = UserDetail::where('user_id', $user->id)->first();
+            $dataUserDetail = $requestValidate
+                ->merge(["user_id" => $user->id])
+                ->only((new UserDetail())->fillable);
+            $userDetail->update($dataUserDetail);
+
+            # role assigned
+            $user->syncRoles($requestValidate->role);
+
+            # Commit
+            DB::commit();
+
+            # return
+            return redirect()->route('user.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['status' => "Project cannot be updated"]);
         }
-        $user->update($dataUser);
-
-        # Update User Detail
-        $userDetail = UserDetail::where('user_id', $user->id)->first();
-        $dataUserDetail = $requestValidate
-            ->merge(["user_id" => $user->id])
-            ->only((new UserDetail())->fillable);
-        $userDetail->update($dataUserDetail);
-
-        # role assigned
-        $user->syncRoles($requestValidate->role);
-
-        # return
-        return redirect()->route('user.index');
-        //     DB::commit();
-        // } catch (\Throwable $e) {
-        //     DB::rollBack();
-        //     abort(500);
-        // }
     }
 
     /**

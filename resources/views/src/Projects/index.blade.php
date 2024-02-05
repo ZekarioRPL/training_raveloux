@@ -80,12 +80,10 @@
                     },
                     {
                         data: 'status',
-                        name: 'status',
-                        title: 'Status',
-                        render: function(data, type, row) {
-                            return data ? (data?.length > 40) ? ((data.substr(0, 40) + '...')) :
-                                data : '-';
-                        },
+                        title: 'status',
+                        caldendarable: false,
+                        orderable: false,
+                        exportable: false,
                     },
                     {
                         data: 'action',
@@ -93,7 +91,6 @@
                         caldendarable: false,
                         orderable: false,
                         exportable: false,
-                        // footer: 'Id',
                     },
 
                 ]
