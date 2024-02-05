@@ -110,7 +110,6 @@ class ManageTask extends Controller
 
         DB::beginTransaction();
         try {
-
             # insert
             $dataTask = $requestValidate->only((new Task())->fillable);
             $task = Task::create($dataTask);
@@ -124,7 +123,7 @@ class ManageTask extends Controller
                 ->leftJoin('view_data_users AS u', 'u.id', 't.user_id')
                 ->leftJoin('clients AS c', 'c.id', 't.client_id')
                 ->leftJoin('projects AS p', 'p.id', 't.project_id')
-                ->select('t.*', 'c.contact_name', 'u.user_full_name AS user_name', 'p.title AS project_name')
+                ->select('t.*', 'c.contact_name', 'u.user_full_name AS user_name', 'p.title AS project_name', 'u.email AS email')
                 ->whereNull('t.deleted_at')
                 ->where('t.id', $task->id)
                 ->first();
@@ -134,7 +133,7 @@ class ManageTask extends Controller
             $task->project_name = $descendantTask->project_name;
 
             $email = new TaskMail($task);
-            Mail::to('sefsaham@gmail.com')->send($email);
+            Mail::to($descendantTask->email)->send($email);
 
             # Commit
             DB::commit();
@@ -143,7 +142,7 @@ class ManageTask extends Controller
             return redirect()->route('task.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with(['status' => "Project cannot be created"]);
+            return back()->with(['status' => "Task cannot be created"]);
         }
     }
 
@@ -217,7 +216,7 @@ class ManageTask extends Controller
             return redirect()->route('task.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with(['status' => "Project cannot be updated"]);
+            return back()->with(['status' => "Task cannot be updated"]);
         }
     }
 

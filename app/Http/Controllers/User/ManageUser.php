@@ -104,7 +104,7 @@ class ManageUser extends Controller
             return redirect()->route('user.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with(['status' => "Project cannot be created"]);
+            return back()->with(['status' => "User cannot be created"]);
         }
     }
 
@@ -179,7 +179,7 @@ class ManageUser extends Controller
             return redirect()->route('user.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with(['status' => "Project cannot be updated"]);
+            return back()->with(['status' => "User cannot be updated"]);
         }
     }
 
