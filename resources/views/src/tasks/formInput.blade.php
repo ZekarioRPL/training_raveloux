@@ -116,8 +116,8 @@
                                 id="file_input" name="file_input" type="file" value="{{ old('file_input') }}">
                             @if (isset($task))
                                 <div class="mt-5">
-                                    <img src="{{ $task->getFirstMediaUrl('task_media') }}"
-                                        alt="{{ $task->getFirstMedia('task_media')->file_name }}"
+                                    <img src="{{ $task->getFirstMediaUrl('task_media') ?? '' }}"
+                                        alt="{{ $task->getFirstMedia('task_media')->file_name ?? '' }}"
                                         class="h-auto max-w-sm min-w-[300px] rounded-lg">
                                 </div>
                             @endif

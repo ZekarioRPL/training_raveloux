@@ -30,7 +30,7 @@ class ProjectTaskSeeder extends Seeder
                 'user_id' => User::inRandomOrder()->first()->id,
                 'client_id' => Client::inRandomOrder()->first()->id,
                 'deadline' => $faker->date(),
-                'status' => 'open'
+                'status' => $statuses[($i % count($statuses))]
             ]);
 
             $task = Task::create([

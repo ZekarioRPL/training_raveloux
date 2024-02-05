@@ -82,6 +82,7 @@ class ManageUser extends Controller
         $dataUser = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+            'file_input' => 'required|image|mimes:png,jpg,jpeg'
         ]);
         $requestValidate = $this->validator($request)->safe();
 
@@ -95,7 +96,14 @@ class ManageUser extends Controller
                 ->only((new UserDetail())->fillable);
             UserDetail::create($dataUserDetail);
 
+            # assign role
             $user->assignRole($requestValidate->role);
+
+            # image
+            $filename = $request->file('file_input');
+            if ($request->hasFile('file_input')) {
+                $user->addMedia($filename)->toMediaCollection('user_media');
+            }
 
             # Commit
             DB::commit();
@@ -146,6 +154,7 @@ class ManageUser extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'nullable',
+            'file_input' => 'nullable|image|mimes:png,jpg,jpeg'
         ]);
 
         $requestValidate = $this->validator($request)->safe();
@@ -171,6 +180,12 @@ class ManageUser extends Controller
 
             # role assigned
             $user->syncRoles($requestValidate->role);
+
+            # image
+            $filename = $request->file('file_input');
+            if ($request->hasFile('file_input')) {
+                $user->addMedia($filename)->toMediaCollection('user_media');
+            }
 
             # Commit
             DB::commit();

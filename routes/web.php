@@ -4,6 +4,7 @@ use App\Http\Controllers\Asset\OptionController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Client\ManageClient;
+use App\Http\Controllers\Profile\ManageProfile;
 use App\Http\Controllers\Project\ManageProject;
 use App\Http\Controllers\Task\ManageTask;
 use App\Http\Controllers\User\ManageUser;
@@ -69,6 +70,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('user', ManageUser::class)->only('create', 'store')->middleware('permission:create-user');
     Route::resource('user', ManageUser::class)->only('edit', 'update')->middleware('permission:update-user');
     Route::resource('user', ManageUser::class)->only('destroy')->middleware('permission:delete-user');
+
+    // ROUTE PROFILE
+    Route::resource('profile', ManageProfile::class)->only('edit', 'update');
 });
 
 /**
@@ -95,7 +99,6 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/forgot-password', [ResetPasswordController::class, 'store'])->name('password.email');
     Route::get('/reset-password', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
-
 });
 
 Route::post('/asset/option/client', [OptionController::class, 'usersSelect']);

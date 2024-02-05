@@ -5,7 +5,7 @@
         <section class="px-2 sm:px-4">
             <div class="card relative p-4 overflow-x-auto shadow-md sm:rounded-lg bg-white">
                 <div class="card-header">
-                    <div class="card-title">{{ isset($user) ? 'Edit' : 'Create' }} {{ $title }}</div>
+                    <div class="card-title">Profile</div>
                 </div>
                 @if (session()->has('status'))
                     <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50">
@@ -14,12 +14,12 @@
                         </ul>
                     </div>
                 @endif
-                <form action="{{ isset($user) ? Route('user.update', $user->id) : Route('user.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ Route('profile.update', $profile->id) }}" method="POST" enctype="multipart/form-data">
                     <div class="card-body flex flex-col space-y-3 md:flex">
                         <div>
                             <label for="email">Email</label>
                             <input type="email" class="input-form @error('email') border-red-700 @enderror" name="email"
-                                id="email" value="{{ old('email', $user->email ?? '') }}">
+                                id="email" value="{{ old('email', $profile->email ?? '') }}">
                             @error('email')
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
@@ -35,7 +35,8 @@
                         <div>
                             <label for="first_name">First Name</label>
                             <input type="text" class="input-form @error('first_name') border-red-700 @enderror"
-                                name="first_name" id="first_name" value="{{ old('first_name', $user->first_name ?? '') }}">
+                                name="first_name" id="first_name"
+                                value="{{ old('first_name', $profile->first_name ?? '') }}">
                             @error('first_name')
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
@@ -43,7 +44,7 @@
                         <div>
                             <label for="last_name">Last Name</label>
                             <input type="text" class="input-form @error('last_name') border-red-700 @enderror"
-                                name="last_name" id="last_name" value="{{ old('last_name', $user->last_name ?? '') }}">
+                                name="last_name" id="last_name" value="{{ old('last_name', $profile->last_name ?? '') }}">
                             @error('last_name')
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
@@ -51,7 +52,7 @@
                         <div>
                             <label for="address">Address</label>
                             <input type="text" class="input-form @error('address') border-red-700 @enderror"
-                                name="address" id="address" value="{{ old('address', $user->address ?? '') }}">
+                                name="address" id="address" value="{{ old('address', $profile->address ?? '') }}">
                             @error('address')
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
@@ -60,7 +61,7 @@
                             <label for="phone_number">Phone</label>
                             <input type="text" class="input-form @error('phone_number') border-red-700 @enderror"
                                 name="phone_number" id="phone_number"
-                                value="{{ old('phone_number', $user->phone_number ?? '') }}">
+                                value="{{ old('phone_number', $profile->phone_number ?? '') }}">
                             @error('phone_number')
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
@@ -70,12 +71,8 @@
                             <select id="role" name="role"
                                 class="input-form @error('role') border-red-700 @enderror">
                                 @foreach ($roles as $role)
-                                    @if (isset($userRole))
-                                        @if (($role->name === $role->name) === $userRole->hasRole($role->name))
-                                            <option value="{{ $role->name }}" selected>{{ $role->name }}</option>
-                                        @else
-                                            <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                        @endif
+                                    @if (($role->name === $role->name) === $userRole->hasRole($role->name))
+                                        <option value="{{ $role->name }}" selected>{{ $role->name }}</option>
                                     @else
                                         <option value="{{ $role->name }}">{{ $role->name }}</option>
                                     @endif
@@ -105,9 +102,7 @@
                     </div>
                     <div class="card-footer">
                         @csrf
-                        @isset($user)
-                            @method('put')
-                        @endisset
+                        @method('put')
                         @if (auth()->user()->can('create-user') ||
                                 auth()->user()->can('update-user'))
                             <button class="btn bg-blue-600">Save</button>
@@ -117,10 +112,4 @@
             </div>
         </section>
     </div>
-@endsection
-
-@section('script')
-    <script>
-        $('#sidebar-users').addClass('active')
-    </script>
 @endsection

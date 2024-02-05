@@ -16,19 +16,28 @@
             <div class="navbar-item">
                 <div class="navbar-item ml-3">
                     <div>
-                        <button type="button"
-                            class="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300 "
+                        <button type="button" class="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300 "
                             aria-expanded="false" data-dropdown-toggle="dropdown-user">
-                            <i data-feather="user" class="w-5 h-5" width="20px"></i>
+                            @if (auth()->user()->getFirstMediaUrl('user_media'))
+                                <img src="{{ auth()->user()->getFirstMediaUrl('user_media') ?? '' }}"
+                                    class="w-12 rounded-full h-12">
+                            @else
+                                <i data-feather="user" class="w-5 h-5" width="20px"></i>
+                            @endif
                         </button>
                     </div>
                     <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow "
                         id="dropdown-user">
                         <ul class="py-1" role="none">
                             <li>
-                                <a href="{{ Route('logout') }}" onclick="return confirm('Anda Yakin Ingin Keluar?')"
+                                <a href="{{ Route('profile.edit', auth()->user()->id) }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    role="menuitem">Sign out</a>
+                                    role="menuitem">Profile</a>
+                            </li>
+                            <li>
+                                <a href="{{ Route('logout') }}" onclick="return confirm('Anda Yakin Ingin Keluar?')"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign
+                                    out</a>
                             </li>
                         </ul>
                     </div>
