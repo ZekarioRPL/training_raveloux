@@ -20,7 +20,7 @@
                 @csrf
                 @method('DELETE')
                 <button class='btn-action-table hover:text-red-600'>
-                    <i data-feather="trash-2" width="18"></i>
+                    <i class='bi bi-trash'></i>
                 </button>
             </form>
         @endif
