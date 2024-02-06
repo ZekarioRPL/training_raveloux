@@ -3,7 +3,7 @@ initCompanySelect();
 function initCompanySelect() {
     var optionselect = {
         placeholder: "Select Users",
-        minimumInputLength: 1,
+        // minimumInputLength: 1,
         allowClear: true,
         ajax: {
             url: base_url + "/asset/option/client",
@@ -19,7 +19,6 @@ function initCompanySelect() {
                 };
             },
             processResults: function (data) {
-                console.log($data);
                 var select2Data = $.map(data, function (obj) {
                     obj.id = obj.id;
                     obj.text = `${obj.user_full_name}`;

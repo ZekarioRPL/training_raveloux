@@ -7,7 +7,7 @@
                     type="button"
                     class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
                     <span class="sr-only">Open sidebar</span>
-                    <i data-feather="menu" width="20px"></i>
+                    <i class="bi bi-list text-2xl"></i>
                 </button>
                 <a href="/" class="flex ml-2 md:mr-24">
                     <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">CRM</span>

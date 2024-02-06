@@ -18,7 +18,7 @@ class OptionController extends Controller
         $users = DB::table('view_data_users')
             ->where('user_full_name', 'like', "%$request->search%")
             ->get();
-        dd($users);
+        // dd($users);
 
         return response()->json($users);
     }
