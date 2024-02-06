@@ -86,8 +86,7 @@ class ManageProfile extends Controller
             return redirect()->route('user.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            // return back()->with(['status' => "Don't Can Edit Profile"]);
-            return back()->with(['status' => $e->getMessage()]);
+            return back()->with(['status' => "Don't Can Edit Profile"]);
         }
     }
 

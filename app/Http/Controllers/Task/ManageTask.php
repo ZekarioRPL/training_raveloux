@@ -51,6 +51,15 @@ class ManageTask extends Controller
 
             return DataTables::of($datatables)
                 ->addIndexColumn()
+                ->filter(function ($q) use ($request) {
+                    if($request->search['value']) {
+                        $q = $q->where('t.title', 'LIKE', ("%" . $request->search['value'] . "%"))
+                        ->orWhere('u.user_full_name', 'LIKE', ("%" . $request->search['value'] . "%"))
+                        ->orWhere('c.contact_name', 'LIKE', ("%" . $request->search['value'] . "%"));
+                    }
+
+                    return $q;
+                })
                 ->addColumn('status', function ($datatable) {
                     return view('components.elements.externals.status', [
                         'status' => $datatable->status

@@ -48,6 +48,15 @@ class ManageProject extends Controller
 
             return DataTables::of($projects)
                 ->addIndexColumn()
+                ->filter(function ($q) use ($request) {
+                    if ($request->search['value']) {
+                        $q = $q->where('p.title', 'LIKE', ("%" . $request->search['value'] . "%"))
+                            ->orWhere('u.user_full_name', 'LIKE', ("%" . $request->search['value'] . "%"))
+                            ->orWhere('c.contact_name', 'LIKE', ("%" . $request->search['value'] . "%"));
+                    }
+
+                    return $q;
+                })
                 ->addColumn('status', function ($project) {
                     return view('components.elements.externals.status', [
                         'status' => $project->status
@@ -158,7 +167,7 @@ class ManageProject extends Controller
 
         # validate
         $requestValidated = $this->validator($request)->safe()->toArray();
-        
+
         DB::beginTransaction();
         try {
             # update Project

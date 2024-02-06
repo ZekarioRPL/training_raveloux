@@ -2,14 +2,14 @@
     @if (auth()->user()->can("view-$route"))
         @if (!in_array('show', $exceptActions ?? []))
             <a href="{{ $route }}/{{ $id }}" class='btn-action-table hover:text-sky-400'>
-                <i data-feather="eye" width="18"></i>
+                <i class='bi bi-eye-fill'></i>
             </a>
         @endif
     @endif
     @if (auth()->user()->can("update-$route"))
         @if (!in_array('edit', $exceptActions ?? []))
             <a href="{{ $route }}/{{ $id }}/edit" class='btn-action-table hover:text-yellow-400'>
-                <i data-feather="settings" width="18"></i>
+                <i class='bi bi-gear-fill'></i>
             </a>
         @endif
     @endif
@@ -27,6 +27,6 @@
     @endif
 </div>
 
-<script>
+{{-- <script>
     feather.replace();
-</script>
+</script> --}}

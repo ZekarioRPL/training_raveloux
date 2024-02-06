@@ -44,6 +44,14 @@ class ManageUser extends Controller
 
             return DataTables::of($datatables)
                 ->addIndexColumn()
+                ->filter(function ($q) use ($request) {
+                    if($request->search['value']) {
+                        $q = $q->where('email', 'LIKE', ("%" . $request->search['value'] . "%"))
+                            ->orWhere('user_full_name', 'LIKE', ("%" . $request->search['value'] . "%"));
+                    }
+
+                    return $q;
+                })
                 ->addColumn('action', function ($datatable) use ($exceptActions) {
                     return view('components.elements.externals.TableActionBtn', [
                         'id' => $datatable->id,

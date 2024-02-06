@@ -41,13 +41,20 @@ class ManageClient extends Controller
             # response datatable
             $clients = DB::table('clients')
                 ->select('*')
-                ->whereNull('deleted_at')
-                ->orderBy('updated_at', 'DESC');
+                ->whereNull('deleted_at');
+                // ->orderBy('updated_at', 'DESC');
 
             $exceptActions = ['show'];
 
             return DataTables::of($clients)
                 ->addIndexColumn()
+                ->filter(function ($q) use ($request) {
+                    if ($request->search['value']) {
+                        $q = $q->where('company_name', 'LIKE', ("%" . $request->search['value'] . "%"));
+                    }
+
+                    return $q;
+                })
                 ->addColumn('action', function ($client) use ($exceptActions) {
                     return view('components.elements.externals.TableActionBtn', [
                         'id' => $client->id,

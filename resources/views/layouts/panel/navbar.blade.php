@@ -22,7 +22,7 @@
                                 <img src="{{ auth()->user()->getFirstMediaUrl('user_media') ?? '' }}"
                                     class="w-12 rounded-full h-12">
                             @else
-                                <i data-feather="user" class="w-5 h-5" width="20px"></i>
+                            <i class="bi bi-person-fill w-5 text-lg"></i>
                             @endif
                         </button>
                     </div>
