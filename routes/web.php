@@ -72,7 +72,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('user', ManageUser::class)->only('destroy')->middleware('permission:delete-user');
 
     // ROUTE PROFILE
-    Route::resource('profile', ManageProfile::class)->only('edit', 'update');
+    Route::resource('profile', ManageProfile::class)->only('edit', 'update')->middleware('permission:edit-profile');
 });
 
 /**

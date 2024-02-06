@@ -35,6 +35,8 @@ class RolePermissionSeeder extends Seeder
                 'update-task',
                 'delete-task',
                 'view-task',
+
+                'edit-profile',
             ],
             "simple" => [
                 'create-client',
@@ -51,6 +53,8 @@ class RolePermissionSeeder extends Seeder
                 // 'update-task',
                 // 'delete-task',
                 'view-task',
+
+                'edit-profile',
             ]
         ];
 

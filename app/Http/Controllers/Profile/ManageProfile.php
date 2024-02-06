@@ -18,7 +18,6 @@ class ManageProfile extends Controller
             'last_name' => 'required',
             'address' => 'nullable',
             'phone_number' => 'required',
-            'role' => 'required',
         ]);
 
         if ($dataRequest->fails()) {
@@ -31,15 +30,11 @@ class ManageProfile extends Controller
 
     public function edit(string $id)
     {
-        $roles = DB::table('roles')
-            ->select('*')
-            ->get();
         $userRole = User::findOrFail($id);
         $profile = DB::table('view_data_users')
             ->where('id', $id)
             ->first();
         return view('src.profile.editProfile', [
-            'roles' => $roles,
             'profile' => $profile,
             'userRole' => $userRole
         ]);
@@ -78,9 +73,6 @@ class ManageProfile extends Controller
                 ->only((new UserDetail())->fillable);
             $userDetail->update($dataUserDetail);
 
-            # role assigned
-            $user->syncRoles($requestValidate->role);
-
             # image
             $filename = $request->file('file_input');
             if ($request->hasFile('file_input')) {
@@ -94,7 +86,8 @@ class ManageProfile extends Controller
             return redirect()->route('user.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with(['status' => "User cannot be updated"]);
+            // return back()->with(['status' => "Don't Can Edit Profile"]);
+            return back()->with(['status' => $e->getMessage()]);
         }
     }
 

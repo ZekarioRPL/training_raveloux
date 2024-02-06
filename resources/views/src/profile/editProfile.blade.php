@@ -66,7 +66,7 @@
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div>
+                        {{-- <div>
                             <label for="role">Role</label>
                             <select id="role" name="role"
                                 class="input-form @error('role') border-red-700 @enderror">
@@ -81,7 +81,7 @@
                             @error('role')
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
-                        </div>
+                        </div> --}}
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                 for="file_input">Upload file</label>
@@ -103,8 +103,7 @@
                     <div class="card-footer">
                         @csrf
                         @method('put')
-                        @if (auth()->user()->can('create-user') ||
-                                auth()->user()->can('update-user'))
+                        @if (auth()->user()->can('edit-profile'))
                             <button class="btn bg-blue-600">Save</button>
                         @endif
                     </div>
