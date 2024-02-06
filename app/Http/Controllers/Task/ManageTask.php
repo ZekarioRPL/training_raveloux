@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Task;
 use App\Http\Controllers\Controller;
 use App\Mail\TaskMail;
 use App\Models\Task;
+use App\Models\User;
+use App\Notifications\TaskNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -141,8 +144,14 @@ class ManageTask extends Controller
             $task->user_name = $descendantTask->user_name;
             $task->project_name = $descendantTask->project_name;
 
-            $email = new TaskMail($task);
-            Mail::to($descendantTask->email)->send($email);
+            # Notification
+            $users = User::all();
+            $data = [
+                'header' => 'New Task Notification',
+                'body' => "Title : $task->title",
+                'link' => "/task/$task->id/edit" 
+            ];
+            Notification::send($users, new TaskNotification($data));
 
             # Commit
             DB::commit();
@@ -151,7 +160,8 @@ class ManageTask extends Controller
             return redirect()->route('task.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with(['status' => "Task cannot be created"]);
+            return back()->with(['status' => $e->getMessage()]);
+            // return back()->with(['status' => "Task cannot be created"]);
         }
     }
 

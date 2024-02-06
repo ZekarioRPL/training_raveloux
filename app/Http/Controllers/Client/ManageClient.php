@@ -41,8 +41,8 @@ class ManageClient extends Controller
             # response datatable
             $clients = DB::table('clients')
                 ->select('*')
-                ->whereNull('deleted_at');
-                // ->orderBy('updated_at', 'DESC');
+                ->whereNull('deleted_at')
+                ->orderBy('updated_at', 'DESC');
 
             $exceptActions = ['show'];
 

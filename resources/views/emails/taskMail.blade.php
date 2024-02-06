@@ -30,39 +30,32 @@
 
             <table>
                 <tr>
-                    <td class="">Title</td>
-                    <td class="">: {{ $task->title }}</td>
+                    <td>Title</td>
+                    <td>: {{ $task->title }}</td>
                 </tr>
                 <tr>
-                    <td class="">Responsible</td>
-                    <td class="">: {{ $task->user_name }}</td>
+                    <td>Responsible</td>
+                    <td>: {{ $task->user_name }}</td>
                 </tr>
                 <tr>
-                    <td class="">Project</td>
-                    <td class="">: {{ $task->project_name }}</td>
+                    <td>Project</td>
+                    <td>: {{ $task->project_name }}</td>
                 </tr>
                 <tr>
-                    <td class="">Client</td>
-                    <td class="">: {{ $task->contact_name }}</td>
+                    <td>Client</td>
+                    <td>: {{ $task->contact_name }}</td>
                 </tr>
                 <tr>
-                    <td class="">Deadline</td>
-                    <td class="">: {{ $task->deadline }}</td>
+                    <td>Deadline</td>
+                    <td>: {{ $task->deadline }}</td>
                 </tr>
                 <tr>
-                    <td class="">Status</td>
-                    <td class="">: <strong>{{ $task->status }}</strong></td>
+                    <td>Status</td>
+                    <td>: <strong>{{ $task->status }}</strong></td>
                 </tr>
                 <tr>
-                    <td class="">description</td>
-                    <td class="">: {{ $task->description }}</td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="">
-                        <img src="{{ $task->getFirstMediaUrl('task_media') }}"
-                            alt="{{ $task->getFirstMedia('task_media')->file_name }}"
-                            style="border-radius: 8px; padding: 4px; width: 100%;border: 1px solid #ddd">
-                    </td>
+                    <td>description</td>
+                    <td>: {{ $task->description }}</td>
                 </tr>
             </table>
 
