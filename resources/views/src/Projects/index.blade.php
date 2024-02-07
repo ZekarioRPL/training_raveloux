@@ -112,7 +112,18 @@
                         data: 'project_media',
                         title: 'Image',
                         render: function(data) {
-                            return '<img src="' + data + '" class="rounded-lg w-[75px] md:w-[130px]">';
+                            return data ? '<img src="' + data + '" class="rounded-lg w-[75px] md:w-[130px]">'
+                                : '-';
+                        },
+                    },
+                    {
+                        data: 'deadline',
+                        name: 'deadline',
+                        title: 'Deadline',
+                        render: function(data, type, row) {
+                            return data ? (data?.length > 40) ? ((data.substr(0, 40) +
+                                    '...')) :
+                                data : '-';
                         },
                     },
                     {
