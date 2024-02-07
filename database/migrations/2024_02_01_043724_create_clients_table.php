@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('user_id')->unsigned()->index();
             $table->string('contact_name');
             $table->string('contact_email');
             $table->string('contact_phone_number');

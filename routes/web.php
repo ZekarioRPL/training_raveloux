@@ -4,6 +4,7 @@ use App\Http\Controllers\Asset\OptionController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Client\ManageClient;
+use App\Http\Controllers\Dashboard\ManageDashboard;
 use App\Http\Controllers\Profile\ManageProfile;
 use App\Http\Controllers\Project\ManageProject;
 use App\Http\Controllers\Task\ManageTask;
@@ -37,9 +38,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', function () {
         return redirect()->route('dashboard');
     });
-    Route::get('dashboard', function () {
-        return view('src.dashboard.index');
-    })->name('dashboard');
+    Route::get('dashboard', [ManageDashboard::class, 'index'])->name('dashboard');
 
     /**
      * ================

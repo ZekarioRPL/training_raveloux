@@ -99,9 +99,9 @@
                                 class="input-form @error('status') border-red-700 @enderror">
                                 @foreach ($statuses as $status)
                                     @if ($status === old('status', $task->status ?? null))
-                                        <option value="{{ $status }}" selected>{{ $status }}</option>
+                                        <option value="{{ $status }}" class="capitalize" selected>{{ $status }}</option>
                                     @endif
-                                    <option value="{{ $status }}">{{ $status }}</option>
+                                    <option value="{{ $status }}" class="capitalize">{{ $status }}</option>
                                 @endforeach
                             </select>
                             @error('status')

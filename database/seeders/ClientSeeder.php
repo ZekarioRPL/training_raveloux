@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
@@ -20,6 +21,7 @@ class ClientSeeder extends Seeder
         # Insert Random Client
         for($i = 1; $i <= 30; $i++) {
             Client::create([
+                'user_id' => User::inRandomOrder()->first()->id,
                 'contact_name' => $faker->name(),
                 'contact_email' => $faker->email(),
                 'contact_phone_number' => $faker->phoneNumber(),

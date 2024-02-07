@@ -78,7 +78,9 @@ input:disabled,
 
 
 
-
+.red {
+    background-color: red !important;
+  }
 
 
 
@@ -87,7 +89,7 @@ input:disabled,
 .btn {
     line-height: initial;
     @apply inline-flex items-center justify-center rounded-md cursor-pointer whitespace-nowrap;
-    @apply border shadow border-transparent text-white px-4 h-[2.5rem] capitalize;
+    @apply border shadow border-transparent text-white px-4 h-[2.5rem] capitalize gap-2;
 }
 
 .btn>* {

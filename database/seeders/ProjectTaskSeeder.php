@@ -20,7 +20,7 @@ class ProjectTaskSeeder extends Seeder
     {
         # init faker
         $faker = Faker::create('id_ID');
-        $statuses = ['open', 'off', 'on'];
+        $statuses = ['open', 'off', 'on', 'done'];
         # insert Project
 
         for($i = 1; $i <= 40; $i++) {

@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\HasMedia;
 
-class Project extends Model
+class Project extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, InteractsWithMedia;
     public $fillable = [
         'title',
         'description',
@@ -17,6 +19,12 @@ class Project extends Model
         'deadline',
         'status'
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('project_media')
+            ->onlyKeepLatest(8);
+    }
 
     /**
      * ===========================

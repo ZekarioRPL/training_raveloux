@@ -29,6 +29,7 @@ class ManageProject extends Controller
         return $dataRequest;
     }
 
+    private $statuses = ['open', 'on', 'off', 'done'];
     /**
      * Display a listing of the resource.
      */
@@ -37,12 +38,16 @@ class ManageProject extends Controller
         if (request()->ajax()) {
 
             # query data
-            $projects = DB::table('projects AS p')
-                ->leftJoin('view_data_users AS u', 'u.id', 'p.user_id')
-                ->leftJoin('clients AS c', 'c.id', 'p.client_id')
-                ->select('p.*', 'c.contact_name', 'u.user_full_name AS user_name')
-                ->whereNull('p.deleted_at')
-                ->orderBy('p.updated_at', 'DESC');
+            // $projects = DB::table('projects AS p')
+            $projects = Project::query()
+                ->leftJoin('view_data_users AS u', 'u.id', 'projects.user_id')
+                ->leftJoin('clients AS c', 'c.id', 'projects.client_id')
+                ->select('projects.*', 'c.contact_name', 'u.user_full_name AS user_name')
+                ->whereNull('projects.deleted_at')
+                ->when(auth()->user()->hasRole('simple'), function ($q) {
+                    return $q->where('projects.user_id', auth()->user()->id);
+                })
+                ->orderBy('projects.updated_at', 'DESC');
 
             $exceptActions = ['show'];
 
@@ -50,9 +55,13 @@ class ManageProject extends Controller
                 ->addIndexColumn()
                 ->filter(function ($q) use ($request) {
                     if ($request->search['value']) {
-                        $q = $q->where('p.title', 'LIKE', ("%" . $request->search['value'] . "%"))
+                        $q = $q->where('projects.title', 'LIKE', ("%" . $request->search['value'] . "%"))
                             ->orWhere('u.user_full_name', 'LIKE', ("%" . $request->search['value'] . "%"))
                             ->orWhere('c.contact_name', 'LIKE', ("%" . $request->search['value'] . "%"));
+                    }
+
+                    if ($request->filterStatus) {
+                        $q = $q->where('projects.status', $request->filterStatus);
                     }
 
                     return $q;
@@ -61,6 +70,10 @@ class ManageProject extends Controller
                     return view('components.elements.externals.status', [
                         'status' => $project->status
                     ]);
+                })
+                ->addColumn('project_media', function ($project) {
+                    // return '<img src"' . $project->getFirstMediaUrl('project_media') . '" " alt="" width="50px">';
+                    return $project->getFirstMediaUrl('project_media');
                 })
                 ->addColumn('action', function ($project) use ($exceptActions) {
                     return view('components.elements.externals.TableActionBtn', [
@@ -73,7 +86,9 @@ class ManageProject extends Controller
         }
 
         # return
-        return view('src.projects.index');
+        return view('src.projects.index', [
+            'statuses' => $this->statuses
+        ]);
     }
 
     /**
@@ -88,14 +103,13 @@ class ManageProject extends Controller
         $clients = DB::table('clients')
             ->select('*')
             ->get();
-        $statuses = ['open', 'on', 'off'];
 
         # return
         return view('src.projects.formInput', [
             'title' => 'Project',
             'users' => $users,
             'clients' => $clients,
-            'statuses' => $statuses
+            'statuses' => $this->statuses
         ]);
     }
 
@@ -105,13 +119,24 @@ class ManageProject extends Controller
     public function store(Request $request)
     {
         # validate
+        $request->validate([
+            'file_input.*' => 'required|image|mimes:png,jpg,jpeg'
+        ]);
         $requestValidated = $this->validator($request)->safe()->toArray();
 
         DB::beginTransaction();
         try {
 
             # insert Project
-            Project::create($requestValidated);
+            $project = Project::create($requestValidated);
+
+            # add Image
+            $files = $request->file('file_input');
+            if ($request->hasFile('file_input')) {
+                foreach ($files as $file) {
+                    $project->addMedia($file)->toMediaCollection('project_media');
+                }
+            }
 
             # Commit
             DB::commit();
@@ -145,7 +170,6 @@ class ManageProject extends Controller
         $clients = DB::table('clients')
             ->select('*')
             ->get();
-        $statuses = ['open', 'on', 'off'];
 
         # return
         return view('src.projects.formInput', [
@@ -153,7 +177,7 @@ class ManageProject extends Controller
             'project' => $project,
             'users' => $users,
             'clients' => $clients,
-            'statuses' => $statuses
+            'statuses' => $this->statuses
         ]);
     }
 
@@ -163,15 +187,26 @@ class ManageProject extends Controller
     public function update(Request $request, string $id)
     {
         # find
-        $data = Project::findOrFail($id);
+        $project = Project::findOrFail($id);
 
         # validate
+        $request->validate([
+            'file_input.*' => 'required|image|mimes:png,jpg,jpeg'
+        ]);
         $requestValidated = $this->validator($request)->safe()->toArray();
 
         DB::beginTransaction();
         try {
             # update Project
-            $data->update($requestValidated);
+            $project->update($requestValidated);
+
+            # add Image
+            $files = $request->file('file_input');
+            if ($request->hasFile('file_input')) {
+                foreach ($files as $file) {
+                    $project->addMedia($file)->toMediaCollection('project_media');
+                }
+            }
 
             # Commit
             DB::commit();

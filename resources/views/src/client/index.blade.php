@@ -77,7 +77,17 @@
                                 data : '-';
                         },
                     },
-                    {
+                    @if (auth()->user()->hasRole('admin'))
+                        {
+                            data: 'user_name',
+                            name: 'user_name',
+                            title: 'Responsible',
+                            render: function(data, type, row) {
+                                return data ? (data?.length > 40) ? ((data.substr(0, 40) + '...')) :
+                                    data : '-';
+                            },
+                        },
+                    @endif {
                         data: 'action',
                         title: 'action',
                         caldendarable: false,

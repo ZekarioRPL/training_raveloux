@@ -16,6 +16,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ManageTask extends Controller
 {
+    # VALIDATOR FOR VALIDATE
     public function validator($request)
     {
         $dataRequest = Validator::make($request->all(), [
@@ -34,13 +35,16 @@ class ManageTask extends Controller
 
         return $dataRequest;
     }
+
+    # PRIVATE
+    private $statuses = ['open', 'on', 'off', 'done'];
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         if (request()->ajax()) {
-
             # query data
             $datatables = DB::table('tasks AS t')
                 ->leftJoin('view_data_users AS u', 'u.id', 't.user_id')
@@ -48,22 +52,36 @@ class ManageTask extends Controller
                 ->leftJoin('projects AS p', 'p.id', 't.project_id')
                 ->select('t.*', 'c.contact_name', 'u.user_full_name AS user_name', 'p.title AS project_name')
                 ->whereNull('t.deleted_at')
-                ->orderBy('t.updated_at', 'DESC');
+                ->when(auth()->user()->hasRole('simple'), function ($q) {
+                    return $q->where('t.user_id', auth()->user()->id);
+                })
+                ->orderBy('t.deadline', 'ASC');
 
+                
             $exceptActions = ['show'];
 
             return DataTables::of($datatables)
-                ->addIndexColumn()
                 ->filter(function ($q) use ($request) {
-                    if($request->search['value']) {
+                    if ($request->search['value']) {
                         $q = $q->where('t.title', 'LIKE', ("%" . $request->search['value'] . "%"))
-                        ->orWhere('u.user_full_name', 'LIKE', ("%" . $request->search['value'] . "%"))
-                        ->orWhere('c.contact_name', 'LIKE', ("%" . $request->search['value'] . "%"));
+                            ->orWhere('u.user_full_name', 'LIKE', ("%" . $request->search['value'] . "%"))
+                            ->orWhere('c.contact_name', 'LIKE', ("%" . $request->search['value'] . "%"));
                     }
 
+                    if ($request->filterStart && $request->filterEnd) {
+                        $q = $q->whereBetween('t.deadline', [$request->filterStart, $request->filterEnd]);
+                    }
+
+                    if($request->filterStatus) {
+                        $q = $q->where('t.status', $request->filterStatus);
+                    }
+
+                    if(!$request->filterStatus) {
+                        $q = $q->whereNot('t.status', 'done');
+                    }
                     return $q;
                 })
-                ->addColumn('status', function ($datatable) {
+                ->addColumn('btnStatus', function ($datatable) {
                     return view('components.elements.externals.status', [
                         'status' => $datatable->status
                     ]);
@@ -75,12 +93,14 @@ class ManageTask extends Controller
                         'exceptActions' => $exceptActions
                     ]);
                 })
-                ->escapeColumns([])
+                ->addIndexColumn()
                 ->make();
         }
 
         # return
-        return view('src.tasks.index');
+        return view('src.tasks.index', [
+            'statuses' => $this->statuses
+        ]);
     }
 
     /**
@@ -98,14 +118,13 @@ class ManageTask extends Controller
         $projects = DB::table('projects')
             ->select('*')
             ->get();
-        $statuses = ['open', 'on', 'off'];
 
         return view('src.tasks.formInput', [
             'title' => 'Task',
             'users' => $users,
             'clients' => $clients,
             'projects' => $projects,
-            'statuses' => $statuses,
+            'statuses' => $this->statuses,
         ]);
     }
 
@@ -149,7 +168,7 @@ class ManageTask extends Controller
             $data = [
                 'header' => 'New Task Notification',
                 'body' => "Title : $task->title",
-                'link' => "/task/$task->id/edit" 
+                'link' => "/task/$task->id/edit"
             ];
             Notification::send($users, new TaskNotification($data));
 
@@ -189,16 +208,14 @@ class ManageTask extends Controller
         $projects = DB::table('projects')
             ->select('*')
             ->get();
-        $statuses = ['open', 'on', 'off'];
 
-        // dd($task->getFirstMediaUrl('services'));
         return view('src.tasks.formInput', [
             'title' => 'Task',
             'task' => $task,
             'users' => $users,
             'clients' => $clients,
             'projects' => $projects,
-            'statuses' => $statuses,
+            'statuses' => $this->statuses,
         ]);
     }
 

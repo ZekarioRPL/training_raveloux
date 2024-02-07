@@ -39,10 +39,14 @@ class ManageClient extends Controller
     {
         if (request()->ajax()) {
             # response datatable
-            $clients = DB::table('clients')
-                ->select('*')
-                ->whereNull('deleted_at')
-                ->orderBy('updated_at', 'DESC');
+            $clients = DB::table('clients AS c')
+                ->leftJoin('view_data_users AS u', 'u.id', 'c.user_id')
+                ->select('c.*', 'u.user_full_name AS user_name')
+                ->whereNull('c.deleted_at')
+                ->when(auth()->user()->hasRole('simple'), function ($q) {
+                    return $q->where('c.user_id', auth()->user()->id);
+                })
+                ->orderBy('c.updated_at', 'DESC');
 
             $exceptActions = ['show'];
 
@@ -85,12 +89,13 @@ class ManageClient extends Controller
     public function store(Request $request)
     {
         # validate
-        $requestValidate = $this->validator($request)->safe()->toArray();
+        $requestValidate = $this->validator($request)->safe();
 
         DB::beginTransaction();
         try {
             # insert
-            Client::create($requestValidate);
+            $dataClient = $requestValidate->merge(['user_id' => auth()->user()->id]);
+            Client::create($dataClient);
 
             # Commit
             DB::commit();
@@ -135,12 +140,13 @@ class ManageClient extends Controller
         $client = Client::findOrFail($id);
 
         # validate
-        $requestValidate = $this->validator($request)->safe()->toArray();
+        $requestValidate = $this->validator($request)->safe();
 
         DB::beginTransaction();
         try {
             # update
-            $client->update($requestValidate);
+            $dataClient = $requestValidate->merge(['user_id' => auth()->user()->id]);
+            $client->update($dataClient);
 
             # Commit
             DB::commit();

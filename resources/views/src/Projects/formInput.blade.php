@@ -15,7 +15,7 @@
                     </div>
                 @endif
                 <form action="{{ isset($project) ? Route('project.update', $project->id) : Route('project.store') }}"
-                    method="post">
+                    method="post" enctype="multipart/form-data">
                     <div class="card-body flex flex-col space-y-3 md:flex">
                         <div>
                             <label for="title">Title</label>
@@ -81,13 +81,27 @@
                                 class="input-form @error('status') border-red-700 @enderror">
                                 @foreach ($statuses as $status)
                                     @if ($status === old('status', $project->status ?? null))
-                                        <option value="{{ $status }}" selected>{{ $status }}</option>
+                                        <option value="{{ $status }}" class="capitalize" selected>
+                                            {{ $status }}</option>
                                     @else
-                                        <option value="{{ $status }}">{{ $status }}</option>
+                                        <option value="{{ $status }}" class="capitalize">{{ $status }}
+                                        </option>
                                     @endif
                                 @endforeach
                             </select>
                             @error('status')
+                                <p class="invalid-message text-red-700">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                for="file_input">Upload file</label>
+                            <input
+                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                                id="file_input" name="file_input[]" type="file" value="{{ old('file_input') }}"
+                                multiple>
+
+                            @error('file_input')
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
                         </div>
@@ -97,12 +111,26 @@
                         @isset($project)
                             @method('put')
                         @endisset
-                        @if (auth()->user()->can('create-project') ||
-                                auth()->user()->can('update-project'))
+                        @if (auth()->user()->can('create-project') || auth()->user()->can('update-project'))
                             <button class="btn bg-blue-600">Save</button>
                         @endif
                     </div>
                 </form>
+                @if (isset($project))
+                    <div class="mt-5">
+                        <div class="card-header">
+                            <div class="card-title">{{ isset($project) ? "Image $title" : '' }}</div>
+                        </div>
+                        <div class="grid grid-cols-3 md:grid-cols-4 gap-4 ">
+                            @foreach ($project->getMedia('project_media') as $media)
+                                <div class="p-3 bg-white shadow-lg rounded-lg">
+                                    <img src="{{ $media->getUrl() ?? '' }}" alt="{{ $media->file_name ?? '' }}"
+                                        class="w-[100px] md:w-auto rounded-lg">
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
         </section>
     </div>

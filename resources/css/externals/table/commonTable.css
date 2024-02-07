@@ -8,9 +8,9 @@
     @apply relative border-b;
 }
 
-.table>tbody>tr:hover {
+/* .table>tbody>tr:hover {
     @apply bg-gray-50;
-}
+} */
 
 .table th,
 .table td {
