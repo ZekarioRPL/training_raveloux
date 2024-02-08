@@ -66,22 +66,6 @@
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
                         </div>
-                        {{-- <div>
-                            <label for="role">Role</label>
-                            <select id="role" name="role"
-                                class="input-form @error('role') border-red-700 @enderror">
-                                @foreach ($roles as $role)
-                                    @if (($role->name === $role->name) === $userRole->hasRole($role->name))
-                                        <option value="{{ $role->name }}" selected>{{ $role->name }}</option>
-                                    @else
-                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            @error('role')
-                                <p class="invalid-message text-red-700">{{ $message }}</p>
-                            @enderror
-                        </div> --}}
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                 for="file_input">Upload file</label>

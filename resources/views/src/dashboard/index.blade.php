@@ -3,36 +3,11 @@
 @section('content')
     <div>
         <section>
-            <div class="relative p-4 overflow-x-auto shadow-md sm:rounded-lg bg-white">
-                <div class="flex flex-col items-center justify-between pb-5 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                    <h2 class="card-title">Dashboard</h2>
-                </div>
-
-            </div>
-            {{-- <div class="grid grid-cols-1 gap-3 md:grid-cols-4">
-                <div class="relative p-4 overflow-x-auto shadow-md sm:rounded-lg bg-white">
-                    <div class="flex flex-col items-center justify-between pb-5 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                        <h2 class="card-title">Dashboard</h2>
-                    </div>
-                </div>
-                <div class="relative p-4 overflow-x-auto shadow-md sm:rounded-lg bg-white">
-                    <div class="flex flex-col items-center justify-between pb-5 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                        <h2 class="card-title">Dashboard</h2>
-                    </div>
-                </div>
-                <div class="relative p-4 overflow-x-auto shadow-md sm:rounded-lg bg-white">
-                    <div class="flex flex-col items-center justify-between pb-5 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                        <h2 class="card-title">Dashboard</h2>
-                    </div>
-                </div>
-                <div class="relative p-4 overflow-x-auto shadow-md sm:rounded-lg bg-white">
-                    <div class="flex flex-col items-center justify-between pb-5 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-                        <h2 class="card-title">Dashboard</h2>
-                    </div>
-                </div>
-            </div> --}}
 
             <div class="relative mt-5 p-4 overflow-x-auto shadow-md sm:rounded-lg bg-white">
+                <div class="text-center justify-between pb-5 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+                    <h2 class="card-title">Dashboard</h2>
+                </div>
                 <div class="p-4 bg-white rounded-lg md:p-8" id="stats" role="tabpanel"
                     aria-labelledby="stats-tab">
                     <dl

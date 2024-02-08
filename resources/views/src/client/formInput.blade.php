@@ -89,6 +89,25 @@
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
                         </div>
+                        @if(auth()->user()->hasRole('admin'))
+                        <div>
+                            <label for="user_id">Assigned User</label>
+                            <select id="user_id" name="user_id"
+                                class="input-form @error('user_id') border-red-700 @enderror"
+                                value="{{ old('user_id', $client->user_id ?? null) }}">
+                                @foreach ($users as $user)
+                                    @if ($user->id === old('user_id', $client->user_id ?? null))
+                                        <option value="{{ $user->id }}" selected>{{ $user->user_full_name }}</option>
+                                    @else
+                                        <option value="{{ $user->id }}">{{ $user->user_full_name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('user_id')
+                                <p class="invalid-message text-red-700">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        @endif
                     </div>
                     <div class="card-footer">
                         @csrf

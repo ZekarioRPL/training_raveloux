@@ -78,8 +78,13 @@ class ManageClient extends Controller
      */
     public function create()
     {
+        # setup
+        $users = DB::table('view_data_users')
+            ->select('*')
+            ->get();
         return view('src.client.formInput', [
-            'title' => 'client'
+            'title' => 'client',
+            'users' => $users
         ]);
     }
 
@@ -94,7 +99,9 @@ class ManageClient extends Controller
         DB::beginTransaction();
         try {
             # insert
-            $dataClient = $requestValidate->merge(['user_id' => auth()->user()->id]);
+            $dataClient = $requestValidate
+                ->merge(['user_id' => $request->user_id ?? auth()->user()->id])
+                ->only((new Client())->fillable);
             Client::create($dataClient);
 
             # Commit
@@ -124,10 +131,15 @@ class ManageClient extends Controller
         $client = DB::table('clients')
             ->where('id', $id)
             ->first();
+        # setup
+        $users = DB::table('view_data_users')
+            ->select('*')
+            ->get();
 
         return view('src.client.formInput', [
             'client' => $client,
-            'title' => 'client'
+            'title' => 'client',
+            'users' => $users
         ]);
     }
 
@@ -145,7 +157,7 @@ class ManageClient extends Controller
         DB::beginTransaction();
         try {
             # update
-            $dataClient = $requestValidate->merge(['user_id' => auth()->user()->id]);
+            $dataClient = $requestValidate->merge(['user_id' => $request->user_id ?? auth()->user()->id])->toArray();
             $client->update($dataClient);
 
             # Commit
