@@ -64,7 +64,7 @@
                     class="flex flex-col items-center justify-between pb-5 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                     <button class="btn bg-blue-600" type="button" id="btnApplyFilter">
                         <i class="bi bi-search"></i>
-                        Cari
+                        Search
                     </button>
                 </div>
                 <table id="table-data-task" class="table" cellspacing="0" width="100%"></table>

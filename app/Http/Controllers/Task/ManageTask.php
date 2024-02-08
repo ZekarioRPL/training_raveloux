@@ -23,7 +23,7 @@ class ManageTask extends Controller
             'title' => 'required',
             'description' => 'nullable',
             'deadline' => 'required|date',
-            'user_id' => 'required|integer',
+            'user_id' => 'nullable|integer',
             'client_id' => 'required|integer',
             'project_id' => 'required|integer',
             'status' => 'required',
@@ -142,7 +142,9 @@ class ManageTask extends Controller
         DB::beginTransaction();
         try {
             # insert
-            $dataTask = $requestValidate->only((new Task())->fillable);
+            $dataTask = $requestValidate
+                ->merge(['user_id' => $request->user_id ?? auth()->user()->id])
+                ->only((new Task())->fillable);
             $task = Task::create($dataTask);
 
             # insert file
@@ -164,13 +166,13 @@ class ManageTask extends Controller
             $task->project_name = $descendantTask->project_name;
 
             # Notification
-            $users = User::all();
-            $data = [
-                'header' => 'New Task Notification',
-                'body' => "Title : $task->title",
-                'link' => "/task/$task->id/edit"
-            ];
-            Notification::send($users, new TaskNotification($data));
+            // $users = User::all();
+            // $data = [
+            //     'header' => 'New Task Notification',
+            //     'body' => "Title : $task->title",
+            //     'link' => "/task/$task->id/edit"
+            // ];
+            // Notification::send($users, new TaskNotification($data));
 
             # Commit
             DB::commit();
@@ -179,8 +181,8 @@ class ManageTask extends Controller
             return redirect()->route('task.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with(['status' => $e->getMessage()]);
-            // return back()->with(['status' => "Task cannot be created"]);
+            // return back()->with(['status' => $e->getMessage()]);
+            return back()->with(['status' => "Task cannot be created"]);
         }
     }
 
@@ -225,7 +227,7 @@ class ManageTask extends Controller
     public function update(Request $request, string $id)
     {
         # validate
-        $requestValidate = $this->validator($request)->safe()->toArray();
+        $requestValidate = $this->validator($request)->safe();
         $request->validate([
             'file_input' => 'nullable|image|mimes:png,jpg,jpeg'
         ]);
@@ -237,7 +239,9 @@ class ManageTask extends Controller
         try {
 
             # update data
-            $task->update($requestValidate);
+            $dataTask = $requestValidate->merge(['user_id' => $request->user_id ?? auth()->user()->id])
+                ->toArray();
+            $task->update($dataTask);
 
             # update file
             $filename = $request->file('file_input');

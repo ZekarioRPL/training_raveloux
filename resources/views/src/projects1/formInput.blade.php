@@ -41,39 +41,44 @@
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div>
-                            <label for="user_id">Assigned User</label>
-                            <select id="user_id" name="user_id"
-                                class="input-form @error('user_id') border-red-700 @enderror"
-                                value="{{ old('user_id', $project->user_id ?? null) }}">
-                                @foreach ($users as $user)
-                                    @if ($user->id === old('user_id', $project->user_id ?? null))
-                                        <option value="{{ $user->id }}" selected>{{ $user->user_full_name }}</option>
-                                    @else
-                                        <option value="{{ $user->id }}">{{ $user->user_full_name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            @error('user_id')
-                                <p class="invalid-message text-red-700">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div>
-                            <label for="client_id">Assigned Client</label>
-                            <select id="client_id" name="client_id"
-                                class="input-form @error('client_id') border-red-700 @enderror"
-                                value="{{ old('client_id', $project->client_id ?? null) }}">
-                                @foreach ($clients as $client)
-                                    @if ($client->id === old('client_id', $project->client_id ?? null))
-                                        <option value="{{ $client->id }}" selected>{{ $client->contact_name }}</option>
-                                    @else
-                                        <option value="{{ $client->id }}">{{ $client->contact_name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            @error('client_id')
-                                <p class="invalid-message text-red-700">{{ $message }}</p>
-                            @enderror
+
+                        <div class="sm:grid grid-cols-2 gap-4 space-y-3 md:space-y-0">
+                            <div>
+                                <label for="user_id">Assigned User</label>
+                                <select id="user_id" name="user_id"
+                                    class="input-form @error('user_id') border-red-700 @enderror"
+                                    value="{{ old('user_id', $project->user_id ?? null) }}">
+                                    @foreach ($users as $user)
+                                        @if ($user->id === old('user_id', $project->user_id ?? null))
+                                            <option value="{{ $user->id }}" selected>{{ $user->user_full_name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $user->id }}">{{ $user->user_full_name }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @error('user_id')
+                                    <p class="invalid-message text-red-700">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="client_id">Assigned Client</label>
+                                <select id="client_id" name="client_id"
+                                    class="input-form @error('client_id') border-red-700 @enderror"
+                                    value="{{ old('client_id', $project->client_id ?? null) }}">
+                                    @foreach ($clients as $client)
+                                        @if ($client->id === old('client_id', $project->client_id ?? null))
+                                            <option value="{{ $client->id }}" selected>{{ $client->contact_name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $client->id }}">{{ $client->contact_name }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @error('client_id')
+                                    <p class="invalid-message text-red-700">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                         <div>
                             <label for="status">Status</label>

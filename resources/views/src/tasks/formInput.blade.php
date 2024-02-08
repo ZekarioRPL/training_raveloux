@@ -41,24 +41,26 @@
                                 <p class="invalid-message text-red-700">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div>
-                            <label for="user_id">Assigned User</label>
-                            <select id="user_id" name="user_id"
-                                class="input-form  @error('user_id') border-red-700 @enderror"
-                                value="{{ old('user_id', $task->user_id ?? null) }}">
-                                @foreach ($users as $user)
-                                    @if ($user->id === old('user_id', $task->user_id ?? null))
-                                        <option value="{{ $user->id }}" selected>{{ $user->user_full_name }}</option>
-                                    @else
-                                        <option value="{{ $user->id }}">{{ $user->user_full_name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            {{-- <select name="user_id" id="user_id" class="input-form"></select> --}}
-                            @error('user_id')
-                                <p class="invalid-message text-red-700">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        @if (auth()->user()->hasRole('admin'))
+                            <div>
+                                <label for="user_id">Assigned User</label>
+                                <select id="user_id" name="user_id"
+                                    class="input-form  @error('user_id') border-red-700 @enderror"
+                                    value="{{ old('user_id', $task->user_id ?? null) }}">
+                                    @foreach ($users as $user)
+                                        @if ($user->id === old('user_id', $task->user_id ?? null))
+                                            <option value="{{ $user->id }}" selected>{{ $user->user_full_name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $user->id }}">{{ $user->user_full_name }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @error('user_id')
+                                    <p class="invalid-message text-red-700">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        @endif
                         <div>
                             <label for="client_id">Assigned Client</label>
                             <select id="client_id" name="client_id"
@@ -100,8 +102,9 @@
                                 @foreach ($statuses as $status)
                                     @if ($status === old('status', $task->status ?? null))
                                         <option value="{{ $status }}" class="capitalize" selected>{{ $status }}</option>
+                                    @else
+                                        <option value="{{ $status }}" class="capitalize">{{ $status }}</option>
                                     @endif
-                                    <option value="{{ $status }}" class="capitalize">{{ $status }}</option>
                                 @endforeach
                             </select>
                             @error('status')
@@ -131,8 +134,7 @@
                         @isset($task)
                             @method('put')
                         @endisset
-                        @if (auth()->user()->can('create-task') ||
-                                auth()->user()->can('update-task'))
+                        @if (auth()->user()->can('create-task') || auth()->user()->can('update-task'))
                             <button class="btn bg-blue-600">Save</button>
                         @endif
                     </div>
