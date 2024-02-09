@@ -17,7 +17,7 @@ class ManageUser extends Controller
         $dataRequest = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
-            'address' => 'nullable',
+            'address' => 'required',
             'phone_number' => 'required',
             'role' => 'required',
         ]);

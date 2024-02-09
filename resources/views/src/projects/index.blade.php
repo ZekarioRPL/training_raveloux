@@ -111,6 +111,7 @@
                     {
                         data: 'project_media',
                         title: 'Image',
+                        orderable: false,
                         render: function(data) {
                             return data ? '<img src="' + data + '" class="rounded-lg w-[75px] md:w-[130px]">'
                                 : '-';

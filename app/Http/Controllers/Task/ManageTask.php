@@ -166,13 +166,13 @@ class ManageTask extends Controller
             $task->project_name = $descendantTask->project_name;
 
             # Notification
-            // $users = User::all();
-            // $data = [
-            //     'header' => 'New Task Notification',
-            //     'body' => "Title : $task->title",
-            //     'link' => "/task/$task->id/edit"
-            // ];
-            // Notification::send($users, new TaskNotification($data));
+            $users = User::all();
+            $data = [
+                'header' => 'New Task Notification',
+                'body' => "Title : $task->title",
+                'link' => "/task/$task->id/edit"
+            ];
+            Notification::send($users, new TaskNotification($data));
 
             # Commit
             DB::commit();
