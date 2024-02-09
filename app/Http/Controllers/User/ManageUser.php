@@ -18,7 +18,7 @@ class ManageUser extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'address' => 'required',
-            'phone_number' => 'required',
+            'phone_number' => 'required|numeric|digits:10',
             'role' => 'required',
         ]);
 
@@ -37,6 +37,7 @@ class ManageUser extends Controller
             # query data
             $datatables = DB::table('view_data_users')
                 ->whereNull('deleted_at')
+                ->whereNot('id', auth()->user()->id)
                 ->select('*')
                 ->orderBy('updated_at', 'DESC');
 

@@ -185,10 +185,6 @@
             // BUTTON FILTER
             $('#btnApplyFilter').click(function(e) {
                 table.draw();
-                console.log([
-                    $('#filterStart').val(),
-                    $('#filterEnd').val(),
-                ]);
             })
 
             // SIDEBAR ACTIVE
@@ -199,7 +195,8 @@
     {{-- SELECT 2 --}}
     <script>
         $('#filterStatus').select2({
-            placeholder: 'Select Status'
+            placeholder: 'Select Status',
+            allowClear: true
         });
     </script>
 

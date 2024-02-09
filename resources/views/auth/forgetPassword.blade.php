@@ -15,7 +15,7 @@
                     Forget Password ?
                 </h1>
                 @if (session()->has('status'))
-                    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400">
+                    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50">
                         <ul>
                             <li>{{ session()->get('status') }}</li>
                         </ul>

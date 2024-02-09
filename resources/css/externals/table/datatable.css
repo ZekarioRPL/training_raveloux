@@ -144,8 +144,9 @@ table.dataTable thead .sorting_desc:after {
 }
 
 .dataTables_wrapper>.dataTables_paginate .paginate_button.current {
-    background-color: var(--primary);
-    color: var(--contras-primary);
+    /* background-color: var(--primary);
+    color: var(--contras-primary); */
+    @apply bg-gray-800 text-white;
 }
 
 .dataTables_wrapper>.dataTables_paginate .paginate_button.disabled {

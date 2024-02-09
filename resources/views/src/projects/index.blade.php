@@ -154,7 +154,8 @@
 
     <script>
         $('#filterStatus').select2({
-            placeholder: 'Select Status'
+            placeholder: 'Select Status',
+            allowClear: true
         });
     </script>
 @endsection
