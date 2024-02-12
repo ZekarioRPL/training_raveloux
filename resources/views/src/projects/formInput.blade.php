@@ -99,8 +99,8 @@
                             @enderror
                         </div>
                         <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-900 "
-                                for="file_input">Upload file</label>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 " for="file_input">Upload
+                                file</label>
                             <input
                                 class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
                                 id="file_input" name="file_input[]" type="file" value="{{ old('file_input') }}"
@@ -128,9 +128,25 @@
                         </div>
                         <div class="grid grid-cols-3 md:grid-cols-4 gap-4 ">
                             @foreach ($project->getMedia('project_media') as $media)
-                                <div class="p-3 bg-white shadow-lg rounded-lg">
+                                <div
+                                    class="p-3 bg-white shadow-lg rounded-lg relative flex items-center justify-center h-auto w-full shadow-gray-400 group hover:bg-red-400">
                                     <img src="{{ $media->getUrl() ?? '' }}" alt="{{ $media->file_name ?? '' }}"
-                                        class="w-[100px] md:w-auto rounded-lg">
+                                        class="w-[100px] md:w-auto rounded-lg group-hover:opacity-10">
+                                    <div
+                                        class="hidden group-hover:block absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+                                        <div class="text-center">
+                                            <form action="{{ route('media-library.destroy', ['id' => $media->id]) }}"
+                                                onsubmit="return confirm('Apakah anda benar-benar ingin menghapus gambar ini?')"
+                                                method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class='btn bg-red-500 hover:bg-red-700'>
+                                                    <i class='bi bi-trash'></i>
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>

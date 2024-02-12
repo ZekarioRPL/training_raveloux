@@ -22,18 +22,20 @@
                                 <img src="{{ auth()->user()->getFirstMediaUrl('user_media') ?? '' }}"
                                     class="w-12 rounded-full h-12">
                             @else
-                            <i class="bi bi-person-fill w-5 text-lg"></i>
+                                <i class="bi bi-person-fill w-5 text-lg"></i>
                             @endif
                         </button>
                     </div>
                     <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow "
                         id="dropdown-user">
                         <ul class="py-1" role="none">
-                            <li>
-                                <a href="{{ Route('profile.edit', auth()->user()->id) }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    role="menuitem">Profile</a>
-                            </li>
+                            @if (auth()->user()->can('edit-profile'))
+                                <li>
+                                    <a href="{{ Route('profile.edit', auth()->user()->id) }}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        role="menuitem">Profile</a>
+                                </li>
+                            @endif
                             <li>
                                 <a href="{{ Route('logout') }}" onclick="return confirm('Anda Yakin Ingin Keluar?')"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign

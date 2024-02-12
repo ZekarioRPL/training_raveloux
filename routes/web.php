@@ -7,6 +7,7 @@ use App\Http\Controllers\Client\ManageClient;
 use App\Http\Controllers\Dashboard\ManageDashboard;
 use App\Http\Controllers\Profile\ManageProfile;
 use App\Http\Controllers\Project\ManageProject;
+use App\Http\Controllers\Spatie\ManageMediaLibrary;
 use App\Http\Controllers\Task\ManageTask;
 use App\Http\Controllers\User\ManageUser;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,14 @@ Route::group(['middleware' => 'auth'], function () {
 
     // ROUTE PROFILE
     Route::resource('profile', ManageProfile::class)->only('edit', 'update')->middleware('permission:edit-profile');
+
+    /**
+     * =================
+     * IMAGE SPATIE
+     * =================
+     */
+    Route::delete('/destroy/{id}', [ManageMediaLibrary::class, 'destroy'])
+    ->name('media-library.destroy');
 });
 
 /**
